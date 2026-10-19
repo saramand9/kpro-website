@@ -1,0 +1,5 @@
+.sites-checkout/
+.sites-checkout-*/
+.sites-runtime/
+*.tar.gz
+*.zip

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="KPro is a pre-1.0 Go framework for building multi-transport services behind one predictable runtime."
+    />
+    <meta name="theme-color" content="#07110f" />
+    <title>KPro — One runtime. Native protocols.</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="KPro home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M8 7v26M9 20h9m0 0 12-13M18 20l13 13" />
+          <circle cx="31" cy="7" r="3" />
+          <circle cx="31" cy="33" r="3" />
+        </svg>
+        <span>KPro</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#architecture" data-i18n="navArchitecture">Architecture</a>
+        <a href="#transports" data-i18n="navTransports">Transports</a>
+        <a href="#start" data-i18n="navStart">Quick start</a>
+        <a href="#readiness" data-i18n="navReadiness">Readiness</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="language-switch" type="button" data-language aria-label="切换为中文">中文</button>
+        <a class="button button-small button-ghost" href="https://github.com/saramand9/kpro" target="_blank" rel="noreferrer">
+          GitHub
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+
+        <div class="hero-copy reveal">
+          <div class="eyebrow">
+            <span class="status-dot"></span>
+            <span data-i18n="heroEyebrow">Open-source · Go · pre-1.0</span>
+          </div>
+          <h1 data-i18n="heroTitle">One runtime.<br /><span>Native protocols.</span></h1>
+          <p class="hero-lede" data-i18n="heroLede">
+            Build TCP, QUIC, WebSocket, HTTP, SSE and gRPC services with one lifecycle—without flattening every protocol into the same abstraction.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#start">
+              <span data-i18n="heroPrimary">Start in 10 minutes</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="button button-secondary" href="https://github.com/saramand9/kpro/tree/v0.2.1/docs" target="_blank" rel="noreferrer">
+              <span data-i18n="heroSecondary">Read the docs</span>
+            </a>
+          </div>
+          <div class="hero-proof" aria-label="Project principles">
+            <span><i></i><span data-i18n="proofOne">Bounded by design</span></span>
+            <span><i></i><span data-i18n="proofTwo">Protocol-native APIs</span></span>
+            <span><i></i><span data-i18n="proofThree">Operationally explicit</span></span>
+          </div>
+        </div>
+
+        <div class="hero-console reveal delay-1" aria-label="KPro example">
+          <div class="console-bar">
+            <div class="console-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span>cmd/gateway/main.go</span>
+            <span class="console-state"><i></i> ready</span>
+          </div>
+          <pre><code><span class="code-dim">// Checked assembly catches invalid config early.</span>
+app, err := server.<span class="code-accent">NewChecked</span>(server.Config{
+    Name: <span class="code-string">"gateway"</span>,
+})
+<span class="code-keyword">if</span> err != nil { <span class="code-keyword">return</span> err }
+
+messages := app.<span class="code-accent">Mount</span>(tcp.New(tcp.Config{
+    Addr:  <span class="code-string">":9000"</span>,
+    Codec: codec.KProV1(),
+}))
+messages.<span class="code-accent">HandleSync</span>(msgid.Echo, echo)
+
+app.<span class="code-accent">MountNative</span>(httpEndpoint)
+
+handle, err := app.<span class="code-accent">Start</span>(ctx)
+<span class="code-keyword">if</span> err != nil { <span class="code-keyword">return</span> err }
+<span class="code-keyword">return</span> handle.<span class="code-accent">Wait</span>()</code></pre>
+          <div class="console-footer">
+            <span><b>12</b> transports</span>
+            <span><b>1</b> lifecycle</span>
+            <span><b>0</b> hidden magic</span>
+          </div>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true"><span></span></div>
+      </section>
+
+      <section class="statement section-pad reveal">
+        <p class="section-kicker" data-i18n="statementKicker">THE DESIGN LINE</p>
+        <h2 data-i18n="statementTitle">Unified where it helps.<br /><span>Native where it matters.</span></h2>
+        <p data-i18n="statementBody">
+          KPro standardizes the hard runtime work—startup, shutdown, backpressure, readiness and telemetry—while HTTP remains HTTP, gRPC remains gRPC, and message transports share a focused Message / Context model.
+        </p>
+      </section>
+
+      <section class="architecture section-pad" id="architecture">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker" data-i18n="architectureKicker">ONE PROCESS, CLEAR OWNERSHIP</p>
+            <h2 data-i18n="architectureTitle">The runtime you would otherwise build twice.</h2>
+          </div>
+          <p data-i18n="architectureBody">Compose independent transports behind a dependency-neutral server. Each layer owns one job, and every boundary stays visible.</p>
+        </div>
+
+        <div class="runtime-map reveal">
+          <div class="map-row app-row">
+            <div class="map-label" data-i18n="mapApplication">APPLICATION</div>
+            <div class="map-node node-wide">
+              <span data-i18n="mapNative">Native handlers</span>
+              <i></i>
+              <span>Message / Context</span>
+            </div>
+          </div>
+          <div class="map-connector"><i></i><i></i><i></i></div>
+          <div class="map-row runtime-row">
+            <div class="map-label">KPRO RUNTIME</div>
+            <div class="map-node runtime-node">
+              <span>Routing</span><span>Middleware</span><span>Lifecycle</span><span>Backpressure</span><span>Drain</span><span>Telemetry</span>
+            </div>
+          </div>
+          <div class="map-connector connector-many"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="map-row protocol-row">
+            <div class="map-label" data-i18n="mapEdge">NETWORK EDGE</div>
+            <div class="protocol-nodes">
+              <span>TCP</span><span>KCP</span><span>QUIC</span><span>UDP</span><span>WS</span><span>HTTP</span><span>SSE</span><span>gRPC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="principles">
+          <article class="principle reveal">
+            <span class="principle-number">01</span>
+            <h3 data-i18n="principleOneTitle">One lifecycle</h3>
+            <p data-i18n="principleOneBody">Checked construction, readiness, failure propagation and bounded shutdown across mounted components.</p>
+          </article>
+          <article class="principle reveal delay-1">
+            <span class="principle-number">02</span>
+            <h3 data-i18n="principleTwoTitle">Bounded work</h3>
+            <p data-i18n="principleTwoBody">Router admission, in-flight limits and outbound queues make overload behavior explicit.</p>
+          </article>
+          <article class="principle reveal delay-2">
+            <span class="principle-number">03</span>
+            <h3 data-i18n="principleThreeTitle">Visible boundaries</h3>
+            <p data-i18n="principleThreeBody">Authentication, durable delivery and deployment sizing remain deliberate application responsibilities.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="transports section-pad" id="transports">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker" data-i18n="transportKicker">RUNTIME COMPOSER</p>
+            <h2 data-i18n="transportTitle">Pick the edges your service needs.</h2>
+          </div>
+          <p data-i18n="transportBody">Select transports to see how KPro keeps the process model shared while preserving the right handler shape.</p>
+        </div>
+
+        <div class="composer reveal">
+          <div class="protocol-picker" role="group" aria-label="Select transports">
+            <button type="button" class="protocol active" data-protocol="TCP" data-kind="message"><span>TCP</span><small>Message</small></button>
+            <button type="button" class="protocol" data-protocol="QUIC" data-kind="message"><span>QUIC</span><small>Message</small></button>
+            <button type="button" class="protocol active" data-protocol="WebSocket" data-kind="message"><span>WebSocket</span><small>Message</small></button>
+            <button type="button" class="protocol active" data-protocol="HTTP/2" data-kind="native"><span>HTTP/2</span><small>Native</small></button>
+            <button type="button" class="protocol" data-protocol="HTTP/3" data-kind="native"><span>HTTP/3</span><small>Native</small></button>
+            <button type="button" class="protocol" data-protocol="SSE" data-kind="native"><span>SSE</span><small>Native</small></button>
+            <button type="button" class="protocol active" data-protocol="gRPC" data-kind="native"><span>gRPC</span><small>Native</small></button>
+            <button type="button" class="protocol" data-protocol="UDP" data-kind="message"><span>UDP</span><small>Message</small></button>
+          </div>
+          <div class="composer-output" aria-live="polite">
+            <div class="output-head">
+              <span data-i18n="compositionLabel">YOUR COMPOSITION</span>
+              <span class="output-count"><b data-selected-count>4</b> <span data-i18n="selectedLabel">transports</span></span>
+            </div>
+            <div class="selected-list" data-selected-list></div>
+            <div class="shared-runtime">
+              <span data-i18n="sharedLabel">SHARED RUNTIME</span>
+              <div><i></i><span data-i18n="sharedItems">Lifecycle · Backpressure · Health · Telemetry · Shutdown</span></div>
+            </div>
+            <p data-composition-copy></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="operations section-pad">
+        <div class="operations-copy reveal">
+          <p class="section-kicker" data-i18n="operationsKicker">BUILT FOR THE UNGLAMOROUS PART</p>
+          <h2 data-i18n="operationsTitle">Fast is useful.<br />Predictable is deployable.</h2>
+          <p data-i18n="operationsBody">KPro treats limits and failure behavior as part of the API, not production cleanup work.</p>
+          <a class="text-link" href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/operations.md" target="_blank" rel="noreferrer">
+            <span data-i18n="operationsLink">Explore operations & capacity</span> <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="telemetry-card reveal delay-1">
+          <div class="telemetry-head"><span>runtime / outbound</span><span class="live"><i></i> LIVE</span></div>
+          <div class="metric"><span>queue depth</span><b>24 / 256</b><div><i style="--value: 9%"></i></div></div>
+          <div class="metric"><span>in flight</span><b>81 / 512</b><div><i style="--value: 16%"></i></div></div>
+          <div class="metric"><span>bytes reserved</span><b>1.8 / 8 MiB</b><div><i style="--value: 23%"></i></div></div>
+          <div class="signal-grid">
+            <span><i class="ok"></i> readiness</span><b>READY</b>
+            <span><i class="ok"></i> drain state</span><b>IDLE</b>
+            <span><i></i> rejected</span><b>0</b>
+          </div>
+          <small data-i18n="telemetryNote">Illustrative dashboard — tune every limit to your workload.</small>
+        </div>
+      </section>
+
+      <section class="quick-start section-pad" id="start">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-kicker" data-i18n="startKicker">FROM ZERO TO A RUNNING SERVICE</p>
+            <h2 data-i18n="startTitle">Start with the paved path.</h2>
+          </div>
+          <p data-i18n="startBody">Pin the release, scaffold a service, and keep generated code under review.</p>
+        </div>
+
+        <div class="terminal reveal">
+          <div class="terminal-tabs" role="tablist" aria-label="Quick start steps">
+            <button class="active" role="tab" aria-selected="true" data-step="install"><b>01</b> <span data-i18n="tabInstall">Install</span></button>
+            <button role="tab" aria-selected="false" data-step="create"><b>02</b> <span data-i18n="tabCreate">Create</span></button>
+            <button role="tab" aria-selected="false" data-step="run"><b>03</b> <span data-i18n="tabRun">Run</span></button>
+          </div>
+          <div class="terminal-screen">
+            <span class="prompt">$</span>
+            <code data-command>go install github.com/saramand9/kpro/cmd/kpro@v0.2.1</code>
+            <button class="copy-button" type="button" data-copy data-i18n="copyButton">Copy</button>
+          </div>
+          <div class="terminal-output" data-terminal-output>go: downloading github.com/saramand9/kpro v0.2.1<br /><span>✓ kpro installed</span></div>
+        </div>
+        <p class="pin-note reveal" data-i18n="pinNote">KPro is pre-1.0. Pin an exact version and read the matching release documentation.</p>
+      </section>
+
+      <section class="readiness section-pad" id="readiness">
+        <div class="readiness-card reveal">
+          <div class="readiness-mark" aria-hidden="true">v0</div>
+          <div>
+            <p class="section-kicker" data-i18n="readinessKicker">HONEST BY DEFAULT</p>
+            <h2 data-i18n="readinessTitle">Engineered for trials.<br />Validated by your workload.</h2>
+            <p data-i18n="readinessBody">KPro has repository-level tests, race-sensitive coverage, transport conformance helpers and benchmark budgets. It does not claim your production capacity, availability or compatibility before you measure them.</p>
+          </div>
+          <div class="readiness-links">
+            <a href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/api-stability.md" target="_blank" rel="noreferrer"><span data-i18n="apiStability">API stability</span><b>↗</b></a>
+            <a href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/production-readiness.md" target="_blank" rel="noreferrer"><span data-i18n="productionChecklist">Production checklist</span><b>↗</b></a>
+            <a href="https://github.com/saramand9/kpro/blob/main/docs/production-v1-roadmap.md" target="_blank" rel="noreferrer"><span data-i18n="roadmap">Production v1 roadmap</span><b>↗</b></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta section-pad reveal">
+        <div class="cta-lines" aria-hidden="true"></div>
+        <p class="section-kicker">KPRO</p>
+        <h2 data-i18n="ctaTitle">Build the service.<br /><span>Keep the edges clear.</span></h2>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://github.com/saramand9/kpro" target="_blank" rel="noreferrer"><span data-i18n="ctaGithub">Explore on GitHub</span> <span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/quickstart.md" target="_blank" rel="noreferrer"><span data-i18n="ctaQuickstart">Open quick start</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand" href="#top"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 7v26M9 20h9m0 0 12-13M18 20l13 13" /><circle cx="31" cy="7" r="3" /><circle cx="31" cy="33" r="3" /></svg><span>KPro</span></a>
+      <p data-i18n="footerText">Open-source Go infrastructure. Pre-1.0, built in the open.</p>
+      <div><a href="https://github.com/saramand9/kpro/blob/main/LICENSE">License</a><a href="https://github.com/saramand9/kpro/blob/main/SECURITY.md">Security</a><a href="https://github.com/saramand9/kpro/blob/main/CONTRIBUTING.md">Contribute</a></div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
