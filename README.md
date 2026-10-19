@@ -1,6 +1,7 @@
 # KPro website
 
-Static, buildless landing page for KPro.
+Static, buildless website for KPro. It includes the product landing page and a
+project-level guide that connects framework APIs to a realistic service shape.
 
 ## Preview
 

@@ -1,12 +1,13 @@
 const translations = {
   en: {
-    navArchitecture: "Architecture", navTransports: "Transports", navStart: "Quick start", navReadiness: "Readiness",
+    navArchitecture: "Architecture", navProject: "Project guide", navTransports: "Transports", navStart: "Quick start", navReadiness: "Readiness",
     heroEyebrow: "Open-source · Go · pre-1.0", heroTitle: "One runtime.<br><span>Native protocols.</span>",
     heroLede: "Build TCP, QUIC, WebSocket, HTTP, SSE and gRPC services with one lifecycle—without flattening every protocol into the same abstraction.",
     heroPrimary: "Start in 10 minutes", heroSecondary: "Read the docs", proofOne: "Bounded by design", proofTwo: "Protocol-native APIs", proofThree: "Operationally explicit",
     statementKicker: "THE DESIGN LINE", statementTitle: "Unified where it helps.<br><span>Native where it matters.</span>", statementBody: "KPro standardizes the hard runtime work—startup, shutdown, backpressure, readiness and telemetry—while HTTP remains HTTP, gRPC remains gRPC, and message transports share a focused Message / Context model.",
     architectureKicker: "ONE PROCESS, CLEAR OWNERSHIP", architectureTitle: "The runtime you would otherwise build twice.", architectureBody: "Compose independent transports behind a dependency-neutral server. Each layer owns one job, and every boundary stays visible.", mapApplication: "APPLICATION", mapNative: "Native handlers", mapEdge: "NETWORK EDGE",
     principleOneTitle: "One lifecycle", principleOneBody: "Checked construction, readiness, failure propagation and bounded shutdown across mounted components.", principleTwoTitle: "Bounded work", principleTwoBody: "Router admission, in-flight limits and outbound queues make overload behavior explicit.", principleThreeTitle: "Visible boundaries", principleThreeBody: "Authentication, durable delivery and deployment sizing remain deliberate application responsibilities.",
+    projectKicker: "FROM API TO APPLICATION", projectTitle: "See where the framework ends—and your service begins.", projectBody: "Follow a project-level blueprint that keeps business rules independent, mounts HTTP and message edges around one service, and makes lifecycle ownership reviewable.", projectPrimary: "Build the reference service", projectExamples: "Browse runnable examples", stackLabel: "PROJECT BLUEPRINT", stackComposition: "process composition", stackRules: "business rules", stackAdapters: "adapters", stackEvidence: "real protocol evidence", learnDomain: "Model the domain", learnEdges: "Add protocol edges", learnLifecycle: "Own the lifecycle", learnValidate: "Validate the workload",
     transportKicker: "RUNTIME COMPOSER", transportTitle: "Pick the edges your service needs.", transportBody: "Select transports to see how KPro keeps the process model shared while preserving the right handler shape.", compositionLabel: "YOUR COMPOSITION", selectedLabel: "transports", sharedLabel: "SHARED RUNTIME", sharedItems: "Lifecycle · Backpressure · Health · Telemetry · Shutdown",
     operationsKicker: "BUILT FOR THE UNGLAMOROUS PART", operationsTitle: "Fast is useful.<br>Predictable is deployable.", operationsBody: "KPro treats limits and failure behavior as part of the API, not production cleanup work.", operationsLink: "Explore operations & capacity", telemetryNote: "Illustrative dashboard — tune every limit to your workload.",
     startKicker: "FROM ZERO TO A RUNNING SERVICE", startTitle: "Start with the paved path.", startBody: "Pin the release, scaffold a service, and keep generated code under review.", tabInstall: "Install", tabCreate: "Create", tabRun: "Run", copyButton: "Copy", pinNote: "KPro is pre-1.0. Pin an exact version and read the matching release documentation.",
@@ -14,13 +15,14 @@ const translations = {
     ctaTitle: "Build the service.<br><span>Keep the edges clear.</span>", ctaGithub: "Explore on GitHub", ctaQuickstart: "Open quick start", footerText: "Open-source Go infrastructure. Pre-1.0, built in the open."
   },
   zh: {
-    navArchitecture: "架构", navTransports: "协议", navStart: "快速开始", navReadiness: "成熟度",
+    navArchitecture: "架构", navProject: "项目指南", navTransports: "协议", navStart: "快速开始", navReadiness: "成熟度",
     heroEyebrow: "开源 · Go · pre-1.0", heroTitle: "一个运行时。<br><span>多种原生协议。</span>",
     heroLede: "用一套生命周期构建 TCP、QUIC、WebSocket、HTTP、SSE 与 gRPC 服务，同时保留每种协议最合适的开发方式。",
     heroPrimary: "10 分钟开始", heroSecondary: "阅读文档", proofOne: "资源边界明确", proofTwo: "协议原生接口", proofThree: "运维行为显式",
     statementKicker: "设计边界", statementTitle: "该统一的地方统一。<br><span>该原生的地方原生。</span>", statementBody: "KPro 统一启动、停机、背压、就绪与可观测性；HTTP 仍是 HTTP，gRPC 仍是 gRPC，消息型传输则共享专注的 Message / Context 模型。",
     architectureKicker: "一个进程，清晰归属", architectureTitle: "不必再为每种协议重建运行时。", architectureBody: "在依赖中立的服务器后组装独立传输组件。每一层只负责一件事，每条边界都保持可见。", mapApplication: "应用层", mapNative: "原生处理器", mapEdge: "网络边缘",
     principleOneTitle: "统一生命周期", principleOneBody: "跨组件的配置校验、就绪、失败传播与有界停机。", principleTwoTitle: "有界工作量", principleTwoBody: "Router 准入、在途限制和出站队列让过载行为清晰可控。", principleThreeTitle: "边界保持可见", principleThreeBody: "认证、持久交付和部署容量仍由应用明确负责。",
+    projectKicker: "从 API 到真实项目", projectTitle: "看清框架在哪里结束，业务服务从哪里开始。", projectBody: "跟随项目级蓝图组织独立业务规则，在同一服务周围挂载 HTTP 与消息协议边缘，并让生命周期归属清晰可审查。", projectPrimary: "构建参考服务", projectExamples: "浏览可运行示例", stackLabel: "项目蓝图", stackComposition: "进程组装", stackRules: "业务规则", stackAdapters: "基础设施适配", stackEvidence: "真实协议证据", learnDomain: "建模业务领域", learnEdges: "增加协议边缘", learnLifecycle: "管理完整生命周期", learnValidate: "验证目标负载",
     transportKicker: "运行时组装器", transportTitle: "选择服务真正需要的边缘。", transportBody: "选择传输协议，查看 KPro 如何共享进程模型，同时保留正确的处理器形态。", compositionLabel: "你的组合", selectedLabel: "种传输", sharedLabel: "共享运行时", sharedItems: "生命周期 · 背压 · 健康检查 · 遥测 · 停机",
     operationsKicker: "为那些不光鲜却重要的部分而建", operationsTitle: "快很有用。<br>可预测才能部署。", operationsBody: "KPro 将限制和故障行为视为 API 的一部分，而不是上线后的补救工作。", operationsLink: "查看运维与容量规划", telemetryNote: "示意面板——所有限制都应按你的负载进行配置。",
     startKicker: "从零到运行中的服务", startTitle: "从推荐路径开始。", startBody: "固定精确版本，生成服务骨架，并持续审查生成代码。", tabInstall: "安装", tabCreate: "创建", tabRun: "运行", copyButton: "复制", pinNote: "KPro 仍处于 pre-1.0。请固定精确版本，并阅读对应版本的文档。",
