@@ -31,7 +31,7 @@ for (const css of ["styles.css", "learn.css"]) {
   assert(!/:root|\.site-header\s*\{|--bg:|--accent:/.test(read(css)), `${css}: shared styles must not be redefined`);
 }
 assert(!/opacity:\s*0\b/.test(read("styles.css")), "Homepage must remain visible without JavaScript");
-for (const id of ["architecture", "project-guide", "transports", "start", "readiness"]) assert(read("index.html").includes(`id="${id}"`));
+for (const id of ["architecture", "transports", "start", "readiness"]) assert(read("index.html").includes(`id="${id}"`));
 
 const element = (dataset = {}) => {
   const classes = new Set();

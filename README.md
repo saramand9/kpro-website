@@ -28,7 +28,8 @@ Reading-specific styles and behavior live in `dist/learn.css` and `dist/learn.js
 
 The tutorial uses a single reading column, theme-aware code, and an on-demand
 native chapter dialog. The homepage retains its architecture map, protocol
-composer, quick-start commands and project guide, using the same neutral design.
+composer and quick-start commands. The footer links to the project tutorial;
+its order-service walkthrough, source map and chapters live on the Learn pages.
 All nine chapters follow the same runnable project: first request, business
 rules, HTTP, object wiring, persistence, TCP, state changes, lifecycle, and an
 independent requirement change. Each connects concrete operations to source,

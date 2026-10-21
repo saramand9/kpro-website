@@ -55,27 +55,6 @@
 .principle-number { color: var(--muted); font: 11px/1.7 var(--mono); }
 .principle h3 { font-size: 18px; margin: 12px 0 10px; }
 .principle p { color: var(--muted); margin: 0; line-height: 1.95; font-size: 14px; }
-.project-guide-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 72px; align-items: center; }
-.project-guide-copy h2 { margin: 0; }
-.project-guide-copy > p:not(.section-kicker) { margin: 22px 0 0; color: var(--muted); font-size: 15px; line-height: 1.95; }
-.project-guide-actions { margin-top: 28px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.project-guide-actions .text-link { margin: 0; }
-.project-stack { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-.stack-head, .stack-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; min-height: 54px; padding: 12px 20px; border-bottom: 1px solid var(--line-soft); }
-.stack-head { color: var(--muted); font: 11px/1.6 var(--mono); background: var(--surface); }
-.stack-head span:last-child, .stack-row span { justify-self: end; }
-.stack-row code { color: var(--text); font: 12px/1.8 var(--mono); overflow-wrap: anywhere; }
-.stack-row span { color: var(--muted); font-size: 11px; }
-.stack-row:last-child { border-bottom: 0; }
-.stack-row.stack-core { background: var(--accent-soft); }
-.stack-row.stack-core code, .stack-row.stack-core span { color: var(--accent); }
-.stack-branch { margin-left: 28px; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line-soft); }
-.learning-steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 44px; border-block: 1px solid var(--line-soft); }
-.learning-steps > span { min-height: 64px; padding: 16px; display: flex; gap: 14px; align-items: center; border-right: 1px solid var(--line-soft); }
-.learning-steps > span:first-child { padding-left: 0; }
-.learning-steps > span:last-child { border: 0; }
-.learning-steps b { color: var(--muted); font: 11px/1 var(--mono); }
-.learning-steps i { color: var(--text); font-size: 13px; font-style: normal; }
 .composer { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .protocol-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-right: 1px solid var(--line); }
 .protocol { position: relative; min-height: 96px; padding: 20px; border: 0; background: var(--bg); color: var(--heading); display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 8px; text-align: left; }
@@ -131,23 +110,18 @@
 .readiness-links { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 .readiness-links a { display: flex; justify-content: space-between; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--line); color: var(--text); font-size: 13px; }
 .readiness-links b { font-weight: 400; color: var(--muted); }
-.final-cta { text-align: center; }
-.final-cta h2 { font-size: 40px; margin: 0; }
-.final-cta h2 span { color: var(--muted); }
-.final-cta .hero-actions { justify-content: center; }
 .site-footer { max-width: 1280px; margin: auto; padding: 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 30px; color: var(--muted); font-size: 12px; }
 .site-footer .brand { font-size: 20px; }
 .site-footer > p { margin: 0; }
 .site-footer > div { display: flex; flex-wrap: wrap; gap: 22px; }
 .site-footer > div a { color: var(--muted); }
+.site-footer > div .learn-link { color: var(--accent); font-weight: 500; }
 @media (max-width: 1000px) {
   .hero { gap: 36px; }
   .hero h1 { font-size: 42px; }
   .hero-lede { font-size: 15px; }
   .section-heading { gap: 36px; }
-  .project-guide-grid, .operations { gap: 44px; }
-  .stack-head, .stack-row { grid-template-columns: 1fr; gap: 4px; }
-  .stack-head span:last-child, .stack-row span { justify-self: start; }
+  .operations { gap: 44px; }
   .readiness-card { grid-template-columns: 64px 1fr; }
   .readiness-links { grid-column: 2; }
 }
@@ -155,7 +129,7 @@
   .hero { grid-template-columns: 1fr; padding-top: 56px; gap: 36px; }
   .hero h1 { font-size: 48px; }
   .hero-console { max-width: 640px; width: 100%; }
-  .section-heading, .project-guide-grid, .operations { grid-template-columns: 1fr; gap: 28px; }
+  .section-heading, .operations { grid-template-columns: 1fr; gap: 28px; }
   .section-heading > p { max-width: 600px; }
   .map-row { grid-template-columns: 1fr; gap: 12px; }
   .map-label { text-align: center; }
@@ -163,11 +137,6 @@
   .principles { gap: 24px; }
   .composer { grid-template-columns: 1fr; }
   .protocol-picker { border-right: 0; border-bottom: 1px solid var(--line); }
-  .learning-steps { grid-template-columns: 1fr 1fr; }
-  .learning-steps > span:nth-child(2) { border-right: 0; }
-  .learning-steps > span:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
-  .learning-steps > span:nth-child(3) { padding-left: 0; }
-  .stack-head, .stack-row { grid-template-columns: minmax(0, 1fr) auto; gap: 16px; }
 }
 @media (max-width: 640px) {
   .home { --gutter: 22px; }
@@ -182,15 +151,13 @@
   .console-footer { font-size: 9px; }
   .section-nav { gap: 10px 22px; }
   .section-pad { padding-block: 56px; }
-  .home h2, .final-cta h2 { font-size: 28px; }
+  .home h2 { font-size: 28px; }
   .section-heading { margin-bottom: 28px; }
   .principles { grid-template-columns: 1fr; gap: 28px; }
   .principle h3 { margin-top: 6px; }
   .runtime-map { padding: 22px 16px; }
   .map-node { font-size: 11px; gap: 15px; padding: 16px 10px; }
   .protocol-nodes { grid-template-columns: repeat(4, 1fr); }
-  .stack-head, .stack-row { grid-template-columns: 1fr; gap: 4px; }
-  .project-guide-actions { gap: 18px; }
   .protocol { min-height: 88px; padding: 16px; }
   .protocol::after { top: 16px; right: 16px; }
   .composer-output { padding: 22px; }
@@ -205,4 +172,4 @@
   .readiness-links { grid-column: auto; }
   .site-footer { padding: 28px 22px; flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 380px) { .home { --gutter: 18px; } .button { padding-inline: 16px; font-size: 13px; } .learning-steps i { font-size: 12px; } }
+@media (max-width: 380px) { .home { --gutter: 18px; } .button { padding-inline: 16px; font-size: 13px; } }
