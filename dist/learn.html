@@ -1,164 +1,57 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Build a project-level KPro service with clear domain, transport, lifecycle, and operational boundaries." />
-    <meta name="theme-color" content="#07110f" />
-    <title>Build a real KPro service</title>
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./learn.css" />
-  </head>
-  <body class="learn-page" data-lang="en">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header scrolled">
-      <a class="brand" href="./index.html" aria-label="KPro home">
-        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 7v26M9 20h9m0 0 12-13M18 20l13 13" /><circle cx="31" cy="7" r="3" /><circle cx="31" cy="33" r="3" /></svg>
-        <span>KPro</span>
-      </a>
-      <nav class="nav-links" aria-label="Guide navigation">
-        <a href="#shape" data-en="Project shape" data-zh="项目结构">Project shape</a>
-        <a href="#edges" data-en="Protocol edges" data-zh="协议边缘">Protocol edges</a>
-        <a href="#lifecycle" data-en="Lifecycle" data-zh="生命周期">Lifecycle</a>
-        <a href="#evidence" data-en="Evidence" data-zh="验证证据">Evidence</a>
-      </nav>
-      <div class="header-actions">
-        <button class="language-switch" type="button" data-learn-language aria-label="切换为中文">中文</button>
-        <a class="button button-small button-ghost" href="https://github.com/saramand9/kpro/tree/v0.2.1/examples" target="_blank" rel="noreferrer">Examples <span aria-hidden="true">↗</span></a>
+<html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><meta name="description" content="从第一个 HTTP 请求开始，理解业务代码如何连接到数据库，再为同一份业务接入 TCP。通过一个可以运行、测试和修改的 Go 项目，学会使用 KPro。"><title>构建一个订单服务 · KPro 项目教程</title><script src="./site.js?v=3e28ca21eb7d"></script><link rel="stylesheet" href="./site.css?v=403e8dadb9e8"><link rel="stylesheet" href="./learn.css?v=108e8672ede6"></head>
+<body><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-header-inner"><a class="brand" href="./index.html" aria-label="KPro 首页"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 7v26M9 20h9m0 0 12-13M18 20l13 13"/><circle cx="31" cy="7" r="3"/><circle cx="31" cy="33" r="3"/></svg><span>KPro</span></a><nav class="site-nav" aria-label="主导航"><a href="./index.html">概览</a><a href="./learn.html" aria-current="page">学习</a><a href="./learn/source.html">示例源码</a></nav><div class="site-actions"><a class="github-link" href="https://github.com/saramand9/kpro" target="_blank" rel="noreferrer"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4 1.2-4-2-6-2m12 5v-3.4c0-1 .1-1.4-.5-2 3.3-.4 6.5-1.6 6.5-7A5.4 5.4 0 0 0 19.5 6c.1-.9.1-2.4-.3-3 0 0-1.2-.4-4.2 1.5a15 15 0 0 0-6 0C6 2.6 4.8 3 4.8 3c-.4.6-.4 2.1-.3 3A5.4 5.4 0 0 0 3 9.6c0 5.4 3.2 6.6 6.5 7-.6.6-.5 1.2-.5 2V22"/></svg><span>GitHub</span></a><button class="theme-toggle" type="button" aria-label="切换为深色主题"><svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></svg></button></div></div></header>
+<main id="main" class="article overview-article" tabindex="-1"><header class="chapter-header"><div class="breadcrumb"><a href="./learn.html">项目教程</a><span>/</span><span>Go 多协议应用开发</span></div><h1>构建一个订单服务</h1><p class="lede">从第一个 HTTP 请求开始，理解业务代码如何连接到数据库，再为同一份业务接入 TCP。通过一个可以运行、测试和修改的 Go 项目，学会使用 KPro。</p><div class="hero-actions"><a class="primary-action" href="./learn/01-first-request.html">开始学习 <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a class="text-action" href="./downloads/orders.zip" download>下载示例工程 <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg></a></div><p class="course-meta">Go 1.26.9+<span>·</span>KPro v0.2.1<span>·</span>9 个章节，1 个完整项目</p></header><div class="prose">
+      <h2 id="result">我们会做出什么</h2>
+      <p>一家小店需要记录订单。提交商品编号和数量后，服务生成订单号；店员可以查回订单，也可以取消。下面就是创建一笔订单时，客户端和服务之间发生的事情。</p>
+      <div class="project-preview" aria-label="订单创建请求与响应示例">
+        <div class="preview-heading"><span><i class="preview-dot" aria-hidden="true"></i>订单服务 · 接口示例</span><code>127.0.0.1:8080</code></div>
+        <div class="preview-columns">
+          <div><div class="preview-label">客户端提交</div><div class="request-line"><span>POST</span> /orders</div><pre><code>{
+  "sku": "coffee",
+  "quantity": 2
+}</code></pre></div>
+          <div><div class="preview-label">服务端返回</div><div class="request-line"><span>201</span> Created</div><pre><code>{
+  "id": "a17c…8e42",
+  "sku": "coffee",
+  "quantity": 2,
+  "status": "pending",
+  "created_at": "2026-10-21T08:00:00Z"
+}</code></pre></div>
+        </div>
+        <div class="preview-caption">展示的是接口内容，不是在线运行的服务。ID 已缩写，实际 ID 和时间由每次请求生成。</div>
       </div>
-    </header>
-
-    <main id="main">
-      <section class="learn-hero">
-        <div class="learn-hero-grid" aria-hidden="true"></div>
-        <div class="learn-breadcrumb"><a href="./index.html">KPro</a><span>/</span><span data-en="Project guide" data-zh="项目指南">Project guide</span></div>
-        <div class="learn-hero-copy">
-          <p class="section-kicker" data-en="A PROJECT-LEVEL WALKTHROUGH" data-zh="项目级实践指南">A PROJECT-LEVEL WALKTHROUGH</p>
-          <h1 data-en="Build an order service.<br><span>Not another hello world.</span>" data-zh="构建一个订单服务。<br><span>不再只是 Hello World。</span>">Build an order service.<br><span>Not another hello world.</span></h1>
-          <p data-en="Start with business rules, expose them through HTTP and a message transport, then make startup, shutdown, observability and validation explicit." data-zh="从业务规则开始，通过 HTTP 与消息协议暴露能力，再把启动、停机、可观测性和验证过程逐一落实。">Start with business rules, expose them through HTTP and a message transport, then make startup, shutdown, observability and validation explicit.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#shape"><span data-en="Start with the domain" data-zh="从业务领域开始">Start with the domain</span><span>↓</span></a>
-            <a class="button button-secondary" href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/golden-path.md" target="_blank" rel="noreferrer"><span data-en="Read the golden path" data-zh="阅读黄金路径">Read the golden path</span><span>↗</span></a>
-          </div>
-        </div>
-        <aside class="guide-scope">
-          <span data-en="REFERENCE SCOPE" data-zh="参考范围">REFERENCE SCOPE</span>
-          <dl>
-            <div><dt>HTTP</dt><dd data-en="commands + queries" data-zh="命令与查询">commands + queries</dd></div>
-            <div><dt>TCP / WS</dt><dd data-en="status events" data-zh="状态事件">status events</dd></div>
-            <div><dt>PostgreSQL</dt><dd data-en="application-owned port" data-zh="应用自有端口">application-owned port</dd></div>
-            <div><dt>Ops</dt><dd data-en="health + metrics + drain" data-zh="健康 + 指标 + 排空">health + metrics + drain</dd></div>
-          </dl>
-          <small data-en="A design blueprint, not a production capacity claim." data-zh="这是设计蓝图，不是生产容量承诺。">A design blueprint, not a production capacity claim.</small>
-        </aside>
-      </section>
-
-      <section class="guide-section" id="shape">
-        <div class="guide-index">01</div>
-        <div class="guide-content">
-          <div class="guide-heading">
-            <div><p class="section-kicker" data-en="DOMAIN FIRST" data-zh="业务领域优先">DOMAIN FIRST</p><h2 data-en="Organize around the business,<br>not the transport." data-zh="围绕业务组织代码，<br>而不是围绕协议。">Organize around the business,<br>not the transport.</h2></div>
-            <p data-en="HTTP and TCP are delivery mechanisms. The order service owns rules; adapters translate requests and events at the edge." data-zh="HTTP 和 TCP 都只是交付机制。订单服务拥有业务规则，适配器只在边缘转换请求与事件。">HTTP and TCP are delivery mechanisms. The order service owns rules; adapters translate requests and events at the edge.</p>
-          </div>
-
-          <div class="anatomy">
-            <div class="file-tree" role="tablist" aria-label="Project files">
-              <button class="active" role="tab" aria-selected="true" data-file="main"><span>cmd/orders/</span><b>main.go</b></button>
-              <button role="tab" aria-selected="false" data-file="service"><span>internal/order/</span><b>service.go</b></button>
-              <button role="tab" aria-selected="false" data-file="http"><span>internal/transport/</span><b>http.go</b></button>
-              <button role="tab" aria-selected="false" data-file="message"><span>internal/transport/</span><b>message.go</b></button>
-              <button role="tab" aria-selected="false" data-file="store"><span>internal/platform/</span><b>store.go</b></button>
-              <button role="tab" aria-selected="false" data-file="test"><span>tests/integration/</span><b>orders_test.go</b></button>
-            </div>
-            <div class="file-explainer" aria-live="polite">
-              <div class="file-label"><span data-file-path>cmd/orders/main.go</span><i data-en="PROJECT ROLE" data-zh="项目职责">PROJECT ROLE</i></div>
-              <h3 data-file-title>Own process assembly</h3>
-              <p data-file-body>Create dependencies, register middleware, mount transports, wait for readiness, and translate process signals into cancellation.</p>
-              <div class="file-rule"><b data-en="Rule" data-zh="原则">Rule</b><span data-file-rule>Keep business decisions out of main.</span></div>
-            </div>
-          </div>
-
-          <div class="domain-flow">
-            <div><span>HTTP Handler</span><small data-en="decode + map" data-zh="解码 + 映射">decode + map</small></div>
-            <i>→</i>
-            <div class="domain-core"><span>Order Service</span><small data-en="business rules" data-zh="业务规则">business rules</small></div>
-            <i>→</i>
-            <div><span>Order Store</span><small data-en="application port" data-zh="应用端口">application port</small></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="guide-section guide-alt" id="edges">
-        <div class="guide-index">02</div>
-        <div class="guide-content">
-          <div class="guide-heading">
-            <div><p class="section-kicker" data-en="ONE SERVICE, MULTIPLE EDGES" data-zh="一个服务，多种边缘">ONE SERVICE, MULTIPLE EDGES</p><h2 data-en="Share business logic.<br>Keep protocol semantics." data-zh="共享业务逻辑。<br>保留协议语义。">Share business logic.<br>Keep protocol semantics.</h2></div>
-            <p data-en="HTTP handlers keep request/response semantics. Message handlers keep Message / Context and per-session ordering. Both call the same application service." data-zh="HTTP 处理器保留请求响应语义；消息处理器保留 Message / Context 与会话顺序。二者调用同一个应用服务。">HTTP handlers keep request/response semantics. Message handlers keep Message / Context and per-session ordering. Both call the same application service.</p>
-          </div>
-
-          <div class="edge-tabs">
-            <div class="edge-tablist" role="tablist">
-              <button class="active" role="tab" aria-selected="true" data-edge="http">HTTP · Create order</button>
-              <button role="tab" aria-selected="false" data-edge="message">TCP / WS · Order status</button>
-              <button role="tab" aria-selected="false" data-edge="assembly">main.go · Mount both</button>
-            </div>
-            <pre class="edge-code"><code data-edge-code></code></pre>
-            <div class="edge-note"><b data-en="Why this boundary?" data-zh="为什么这样划分？">Why this boundary?</b><p data-edge-note></p></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="guide-section" id="lifecycle">
-        <div class="guide-index">03</div>
-        <div class="guide-content">
-          <div class="guide-heading">
-            <div><p class="section-kicker" data-en="PROCESS OWNERSHIP" data-zh="进程归属">PROCESS OWNERSHIP</p><h2 data-en="Make the happy path<br>and the shutdown path visible." data-zh="让启动路径与<br>停机路径同样清晰。">Make the happy path<br>and the shutdown path visible.</h2></div>
-            <p data-en="A service is not ready when main returns from construction. Publish readiness only after every readiness-aware runner has bound successfully." data-zh="完成对象组装并不代表服务已就绪。只有所有支持就绪语义的 runner 成功绑定后，才对外发布 readiness。">A service is not ready when main returns from construction. Publish readiness only after every readiness-aware runner has bound successfully.</p>
-          </div>
-
-          <ol class="lifecycle-flow">
-            <li><b>01</b><div><strong data-en="Open dependencies" data-zh="打开依赖">Open dependencies</strong><span data-en="Validate config and connect required resources before traffic." data-zh="在接收流量前校验配置并连接必需资源。">Validate config and connect required resources before traffic.</span></div></li>
-            <li><b>02</b><div><strong data-en="Assemble once" data-zh="一次性组装">Assemble once</strong><span data-en="Register middleware, routes, transports and managed resources." data-zh="注册中间件、路由、传输与托管资源。">Register middleware, routes, transports and managed resources.</span></div></li>
-            <li><b>03</b><div><strong>Start + WaitReady</strong><span data-en="Distinguish listener readiness from startup failure." data-zh="区分监听就绪与启动失败。">Distinguish listener readiness from startup failure.</span></div></li>
-            <li><b>04</b><div><strong data-en="Cancel + drain" data-zh="取消 + 排空">Cancel + drain</strong><span data-en="Stop admission, drain accepted work, then close resources." data-zh="停止准入，排空已接收工作，再关闭资源。">Stop admission, drain accepted work, then close resources.</span></div></li>
-          </ol>
-          <div class="boundary-callout"><span>!</span><p data-en="A transport write receipt confirms the write boundary—not peer processing, durable delivery, or business acknowledgement." data-zh="传输写入回执只确认写入边界，不代表对端已处理、消息已持久化或业务已确认。">A transport write receipt confirms the write boundary—not peer processing, durable delivery, or business acknowledgement.</p></div>
-        </div>
-      </section>
-
-      <section class="guide-section guide-alt" id="evidence">
-        <div class="guide-index">04</div>
-        <div class="guide-content">
-          <div class="guide-heading">
-            <div><p class="section-kicker" data-en="TEST FROM THE INSIDE OUT" data-zh="由内向外测试">TEST FROM THE INSIDE OUT</p><h2 data-en="Turn assumptions<br>into evidence." data-zh="把假设逐步<br>转化为证据。">Turn assumptions<br>into evidence.</h2></div>
-            <p data-en="Repository tests prove framework behavior. Your application still owns its latency, data correctness, failure recovery and safe capacity." data-zh="仓库测试证明框架行为；应用仍需为自身延迟、数据正确性、故障恢复与安全容量负责。">Repository tests prove framework behavior. Your application still owns its latency, data correctness, failure recovery and safe capacity.</p>
-          </div>
-
-          <div class="evidence-ladder">
-            <article><b>01</b><h3 data-en="Domain tests" data-zh="领域测试">Domain tests</h3><p data-en="Exercise order rules with fake ports and no listener." data-zh="使用假端口测试订单规则，不启动监听器。">Exercise order rules with fake ports and no listener.</p><span data-en="fast · deterministic" data-zh="快速 · 确定">fast · deterministic</span></article>
-            <article><b>02</b><h3 data-en="Handler tests" data-zh="处理器测试">Handler tests</h3><p data-en="Verify decoding, error mapping and middleware behavior." data-zh="验证解码、错误映射与中间件行为。">Verify decoding, error mapping and middleware behavior.</p><span data-en="protocol boundary" data-zh="协议边界">protocol boundary</span></article>
-            <article><b>03</b><h3 data-en="Integration tests" data-zh="集成测试">Integration tests</h3><p data-en="Use real framing, loopback listeners and the target database." data-zh="使用真实帧、回环监听器与目标数据库。">Use real framing, loopback listeners and the target database.</p><span data-en="real components" data-zh="真实组件">real components</span></article>
-            <article><b>04</b><h3 data-en="Workload tests" data-zh="负载测试">Workload tests</h3><p data-en="Measure tail latency, overload, drain and recovery in the deployment shape." data-zh="在目标部署形态测量尾延迟、过载、排空与恢复。">Measure tail latency, overload, drain and recovery in the deployment shape.</p><span data-en="production evidence" data-zh="生产证据">production evidence</span></article>
-          </div>
-
-          <div class="next-actions">
-            <div><p class="section-kicker" data-en="CONTINUE IN THE REPOSITORY" data-zh="在仓库中继续">CONTINUE IN THE REPOSITORY</p><h3 data-en="Use the guide with runnable code." data-zh="结合可运行代码使用本指南。">Use the guide with runnable code.</h3></div>
-            <div class="next-links">
-              <a href="https://github.com/saramand9/kpro/tree/v0.2.1/examples/quickstart" target="_blank" rel="noreferrer"><span data-en="Minimal lifecycle" data-zh="最小生命周期">Minimal lifecycle</span><b>↗</b></a>
-              <a href="https://github.com/saramand9/kpro/tree/v0.2.1/examples/http-modular" target="_blank" rel="noreferrer"><span data-en="Modular HTTP" data-zh="模块化 HTTP">Modular HTTP</span><b>↗</b></a>
-              <a href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/operations.md" target="_blank" rel="noreferrer"><span data-en="Operations & capacity" data-zh="运维与容量">Operations & capacity</span><b>↗</b></a>
-              <a href="https://github.com/saramand9/kpro/blob/v0.2.1/docs/production-readiness.md" target="_blank" rel="noreferrer"><span data-en="Production checklist" data-zh="生产准备清单">Production checklist</span><b>↗</b></a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <a class="brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 7v26M9 20h9m0 0 12-13M18 20l13 13" /><circle cx="31" cy="7" r="3" /><circle cx="31" cy="33" r="3" /></svg><span>KPro</span></a>
-      <p data-en="Project-level guidance for KPro v0.2.1." data-zh="面向 KPro v0.2.1 的项目级指南。">Project-level guidance for KPro v0.2.1.</p>
-      <div><a href="./index.html" data-en="Home" data-zh="首页">Home</a><a href="https://github.com/saramand9/kpro">GitHub</a><a href="https://github.com/saramand9/kpro/tree/v0.2.1/docs">Docs</a></div>
-    </footer>
-    <script src="./learn.js"></script>
-  </body>
-</html>
+      <ol class="project-results">
+        <li><b>创建、查询与取消</b><span>用真实请求理解路由、参数校验和业务规则。</span></li>
+        <li><b>重启后仍能查到</b><span>将内存存储换成 SQLite，验证订单确实保存。</span></li>
+        <li><b>两个入口，同一笔订单</b><span>让 HTTP 和 TCP 调用同一个业务服务。</span></li>
+      </ol>
+      <aside class="note"><strong>教程的范围</strong><p>这是教学应用，不是完整电商系统：没有账号、支付、库存和订阅。创建请求重试会新增订单；重复取消才是幂等的。入口默认只绑定本机。</p></aside>
+      <h2 id="download">先在本机运行成品</h2>
+      <p>需要会基本 Go 语法、能在终端执行命令。Go 版本至少为 <strong>1.26.9</strong>，这是本例固定依赖的 KPro v0.2.1 的要求。第一次下载依赖需要网络；之后不需要安装数据库服务器，SQLite 数据库就是一个本地文件。</p>
+      <p><a class="download" href="./downloads/orders.zip" download>下载完整 orders 工程 <span>ZIP ↓</span></a> <a href="./learn/source.html">在网页中阅读全部源码 →</a></p>
+      <p>解压后进入包含 <code>go.mod</code> 的 <code>orders</code> 目录。以下命令都在这个目录执行。如果你拿的是官网源码，位置是 <code>examples/orders</code>。</p>
+      <figure class="code-block terminal"><figcaption><span class="terminal-label"><span aria-hidden="true">❯_</span> 终端 1 · 启动服务</span><button class="copy" type="button" aria-label="复制命令"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg><span>复制</span></button></figcaption><pre tabindex="0"><code>go version
+go mod download
+go run ./cmd/orders</code></pre></figure>
+      <p>看到 <code>listeners ready</code> 后保持这个终端运行。当前目录会出现 <code>orders.db</code>，它存放稍后创建的订单。另开一个终端，进入同一目录：</p>
+      <figure class="code-block terminal"><figcaption><span class="terminal-label"><span aria-hidden="true">❯_</span> 终端 2 · 实际操作一笔订单</span><button class="copy" type="button" aria-label="复制命令"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg><span>复制</span></button></figcaption><pre tabindex="0"><code>go run ./cmd/check</code></pre></figure>
+      <p>检查工具向你的服务发送真实 HTTP 请求，会打印每次响应的完整 JSON。按顺序应当得到下面这些状态码：</p>
+      <figure class="code-block output"><figcaption><span class="output-label">预期结果 · id 和时间由本次运行生成</span></figcaption><pre tabindex="0"><code>GET /readyz                         → 200
+POST /orders                        → 201
+GET /orders/本次生成的ID              → 200
+POST /orders（quantity 为 0）         → 422
+POST /orders/本次生成的ID/cancel       → 200
+POST /orders/本次生成的ID/cancel       → 200</code></pre></figure>
+      <p>工具最后打印订单 ID，请记下来。此时订单的状态已经是 <code>cancelled</code>。停止终端 1，再执行相同启动命令，用这个 ID 查询，仍应该得到同一笔订单。不要换一个工作目录，否则默认数据库路径也会改变。</p>
+      <figure class="code-block terminal"><figcaption><span class="terminal-label"><span aria-hidden="true">❯_</span> 手动查询 · 把 ORDER_ID 替换成刚才的 ID</span><button class="copy" type="button" aria-label="复制命令"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></svg><span>复制</span></button></figcaption><pre tabindex="0"><code>curl -i http://127.0.0.1:8080/orders/ORDER_ID</code></pre></figure>
+      <p>Windows PowerShell 中请用 <code>curl.exe</code> 代替 <code>curl</code>，避免某些版本把它当作 PowerShell 命令别名。更复杂的 JSON 请求都使用工程内的文件，避免命令行引号差异。</p>
+      <h2 id="whole">一笔订单会经过哪里</h2>
+      <div class="flow" aria-label="请求与组装关系"><div><b>HTTP 客户端</b><span>POST /orders</span></div><i>→</i><div><b>httpapi</b><span>读 JSON，写响应</span></div><i>→</i><div class="focus"><b>order.Service</b><span>校验，执行业务规则</span></div><i>→</i><div><b>Store</b><span>memory 或 sqlite</span></div></div>
+      <p><code>main</code> 先选择存储，<code>app.New</code> 再把图里的对象连起来。请求到来时，main 不会重新执行；已经注册的 HTTP handler 调用已经创建的 Service，Service 再调用那个存储对象。</p>
+      <div class="table-wrap"><table><thead><tr><th scope="col">你在工程中寻找的东西</th><th scope="col">实际文件</th><th scope="col">它不负责什么</th></tr></thead><tbody><tr><td>程序入口、参数、退出信号</td><td><a class="file-link" href="./learn/source.html#cmd-orders-main-go">cmd/orders/main.go</a></td><td>不解析每个订单请求</td></tr><tr><td>把组件接在一起</td><td><a class="file-link" href="./learn/source.html#internal-app-app-go">internal/app/app.go</a></td><td>不判断订单是否合法</td></tr><tr><td>HTTP 路由与 JSON</td><td><a class="file-link" href="./learn/source.html#internal-httpapi-api-go">internal/httpapi/api.go</a></td><td>不写 SQL</td></tr><tr><td>订单、校验、取消规则</td><td><a class="file-link" href="./learn/source.html#internal-order-service-go">internal/order/service.go</a></td><td>不知道请求来自 HTTP 还是 TCP</td></tr><tr><td>临时存储 / 持久化</td><td><a class="file-link" href="./learn/source.html#internal-memory-store-go">internal/memory/store.go</a><br><a class="file-link" href="./learn/source.html#internal-sqlite-store-go">internal/sqlite/store.go</a></td><td>不决定 HTTP 状态码</td></tr><tr><td>TCP 消息入口</td><td><a class="file-link" href="./learn/source.html#internal-messageapi-api-go">internal/messageapi/api.go</a></td><td>不创建第二套订单业务</td></tr><tr><td>可运行的客户端</td><td><a class="file-link" href="./learn/source.html#cmd-check-main-go">cmd/check/main.go</a><br><a class="file-link" href="./learn/source.html#internal-tcpclient-client-go">internal/tcpclient/client.go</a></td><td>不代替服务端校验</td></tr></tbody></table></div>
+      <h2 id="read">怎样使用这份教程</h2>
+      <p>我们采用<strong>先使用成品，再逐段读懂并修改它</strong>的方式。下载包一开始就包含完整工程；正文会标出正在阅读的文件和函数。第 1 章另有一个独立的单文件起点，后面再逐步看完整服务。</p>
+      <p>先完成第 1–4 章，你应该能追踪一次创建请求；第 5–7 章解释存储、第二种协议和并发状态变化；第 8–9 章练习运行维护与需求修改。源码可以直接在本站阅读，核心逻辑都在正文讲解，不需要先把框架仓库翻一遍。</p>
+      <aside class="note"><strong>如果第一步没有成功</strong><p>连接被拒绝：先看终端 1 是否还在运行，以及有没有报端口占用。Go 版本错误：核对 go version。依赖下载错误：先解决本机 Go 模块网络访问。数据库打不开：检查工作目录是否可写。先让这一步成功，再继续。</p></aside>
+      </div><section class="syllabus" id="chapters"><div class="section-eyebrow">从运行到理解，再到独立修改</div><h2>学习路线</h2><nav class="chapter-list" aria-label="课程安排"><a href="./learn/01-first-request.html"><span class="lesson-index">01</span><span><strong>运行第一个 HTTP 服务</strong><small>运行、修改一条路由，分清启动时的配置与每次请求的处理。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/02-business.html"><span class="lesson-index">02</span><span><strong>定义订单与校验规则</strong><small>追踪输入怎样变成已保存的订单，并用测试观察一条规则失效。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/03-http.html"><span class="lesson-index">03</span><span><strong>创建和查询订单</strong><small>跟随一笔真实订单，从 HTTP 请求追踪到保存，再用 ID 查回。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/04-assembly.html"><span class="lesson-index">04</span><span><strong>连接路由、业务与存储</strong><small>从 main 找到每个对象的创建位置，验证同一份数据究竟由谁共享。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/05-persistence.html"><span class="lesson-index">05</span><span><strong>将订单保存到 SQLite</strong><small>亲自验证重启前后数据是否存在，追踪一笔订单怎样写入并读回文件。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/06-second-protocol.html"><span class="lesson-index">06</span><span><strong>通过 TCP 查询同一笔订单</strong><small>用两个客户端读取同一笔订单，区分协议翻译、消息编解码和业务复用。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/07-state-and-tests.html"><span class="lesson-index">07</span><span><strong>取消订单与处理并发</strong><small>用重复取消和存储测试，理解业务规则为什么需要一个原子的修改边界。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/08-lifecycle.html"><span class="lesson-index">08</span><span><strong>启动、检查与关闭服务</strong><small>观察成功启动、端口冲突、依赖故障和主动停止，区分这些结果。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/09-make-it-yours.html"><span class="lesson-index">09</span><span><strong>独立修改一个业务需求</strong><small>先写失败的边界测试，再修改业务与数据库约束，用完整流程验收需求。</small></span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></nav></section><nav class="pagination" aria-label="前后章节"><span></span><a href="./learn/01-first-request.html"><small>下一章 →</small><span>运行第一个 HTTP 服务</span></a></nav><footer class="doc-footer"><span>KPro v0.2.1 · 项目教程</span><a href="./index.html">返回框架首页 <svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></footer></main><nav class="reading-dock" aria-label="阅读导航"><button class="contents-toggle" type="button" aria-label="章节目录" aria-haspopup="dialog" aria-controls="course-nav"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>目录</span></button><div class="dock-current"><span>项目概览</span><strong>构建一个订单服务</strong></div><a class="dock-next" href="./learn/01-first-request.html">开始学习<svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></nav><dialog class="contents-dialog" id="course-nav" aria-labelledby="contents-title"><div class="contents-heading"><div><p>项目教程</p><h2 id="contents-title">构建一个订单服务</h2></div><button class="close-contents" type="button" aria-label="关闭目录">×</button></div><nav class="chapter-list" aria-label="教程章节"><a href="./learn.html" aria-current="page"><span class="lesson-index">00</span><span>构建一个订单服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/01-first-request.html"><span class="lesson-index">01</span><span>运行第一个 HTTP 服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/02-business.html"><span class="lesson-index">02</span><span>定义订单与校验规则</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/03-http.html"><span class="lesson-index">03</span><span>创建和查询订单</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/04-assembly.html"><span class="lesson-index">04</span><span>连接路由、业务与存储</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/05-persistence.html"><span class="lesson-index">05</span><span>将订单保存到 SQLite</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/06-second-protocol.html"><span class="lesson-index">06</span><span>通过 TCP 查询同一笔订单</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/07-state-and-tests.html"><span class="lesson-index">07</span><span>取消订单与处理并发</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/08-lifecycle.html"><span class="lesson-index">08</span><span>启动、检查与关闭服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/09-make-it-yours.html"><span class="lesson-index">09</span><span>独立修改一个业务需求</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></nav><div class="contents-footer"><a href="./learn/source.html"><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 20"/></svg>完整源码</a><a href="./downloads/orders.zip" download><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg>下载工程</a><span>KPro v0.2.1</span></div></dialog><noscript><style>.reading-dock,.theme-toggle,.copy{display:none}</style><nav class="nojs-contents" aria-label="教程目录"><a href="./learn.html" aria-current="page"><span class="lesson-index">00</span><span>构建一个订单服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/01-first-request.html"><span class="lesson-index">01</span><span>运行第一个 HTTP 服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/02-business.html"><span class="lesson-index">02</span><span>定义订单与校验规则</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/03-http.html"><span class="lesson-index">03</span><span>创建和查询订单</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/04-assembly.html"><span class="lesson-index">04</span><span>连接路由、业务与存储</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/05-persistence.html"><span class="lesson-index">05</span><span>将订单保存到 SQLite</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/06-second-protocol.html"><span class="lesson-index">06</span><span>通过 TCP 查询同一笔订单</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/07-state-and-tests.html"><span class="lesson-index">07</span><span>取消订单与处理并发</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/08-lifecycle.html"><span class="lesson-index">08</span><span>启动、检查与关闭服务</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><a href="./learn/09-make-it-yours.html"><span class="lesson-index">09</span><span>独立修改一个业务需求</span><svg class="icon " viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></nav></noscript><div class="toast" role="status" aria-live="polite"></div><script src="./learn.js?v=a1d49db694fe" defer></script></body></html>

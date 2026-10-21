@@ -3,3 +3,4 @@
 .sites-runtime/
 *.tar.gz
 *.zip
+!dist/downloads/orders.zip

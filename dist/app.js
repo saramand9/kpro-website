@@ -1,37 +1,173 @@
 const translations = {
-  en: {
-    navArchitecture: "Architecture", navProject: "Project guide", navTransports: "Transports", navStart: "Quick start", navReadiness: "Readiness",
-    heroEyebrow: "Open-source · Go · pre-1.0", heroTitle: "One runtime.<br><span>Native protocols.</span>",
-    heroLede: "Build TCP, QUIC, WebSocket, HTTP, SSE and gRPC services with one lifecycle—without flattening every protocol into the same abstraction.",
-    heroPrimary: "Start in 10 minutes", heroSecondary: "Read the docs", proofOne: "Bounded by design", proofTwo: "Protocol-native APIs", proofThree: "Operationally explicit",
-    statementKicker: "THE DESIGN LINE", statementTitle: "Unified where it helps.<br><span>Native where it matters.</span>", statementBody: "KPro standardizes the hard runtime work—startup, shutdown, backpressure, readiness and telemetry—while HTTP remains HTTP, gRPC remains gRPC, and message transports share a focused Message / Context model.",
-    architectureKicker: "ONE PROCESS, CLEAR OWNERSHIP", architectureTitle: "The runtime you would otherwise build twice.", architectureBody: "Compose independent transports behind a dependency-neutral server. Each layer owns one job, and every boundary stays visible.", mapApplication: "APPLICATION", mapNative: "Native handlers", mapEdge: "NETWORK EDGE",
-    principleOneTitle: "One lifecycle", principleOneBody: "Checked construction, readiness, failure propagation and bounded shutdown across mounted components.", principleTwoTitle: "Bounded work", principleTwoBody: "Router admission, in-flight limits and outbound queues make overload behavior explicit.", principleThreeTitle: "Visible boundaries", principleThreeBody: "Authentication, durable delivery and deployment sizing remain deliberate application responsibilities.",
-    projectKicker: "FROM API TO APPLICATION", projectTitle: "See where the framework ends—and your service begins.", projectBody: "Follow a project-level blueprint that keeps business rules independent, mounts HTTP and message edges around one service, and makes lifecycle ownership reviewable.", projectPrimary: "Build the reference service", projectExamples: "Browse runnable examples", stackLabel: "PROJECT BLUEPRINT", stackComposition: "process composition", stackRules: "business rules", stackAdapters: "adapters", stackEvidence: "real protocol evidence", learnDomain: "Model the domain", learnEdges: "Add protocol edges", learnLifecycle: "Own the lifecycle", learnValidate: "Validate the workload",
-    transportKicker: "RUNTIME COMPOSER", transportTitle: "Pick the edges your service needs.", transportBody: "Select transports to see how KPro keeps the process model shared while preserving the right handler shape.", compositionLabel: "YOUR COMPOSITION", selectedLabel: "transports", sharedLabel: "SHARED RUNTIME", sharedItems: "Lifecycle · Backpressure · Health · Telemetry · Shutdown",
-    operationsKicker: "BUILT FOR THE UNGLAMOROUS PART", operationsTitle: "Fast is useful.<br>Predictable is deployable.", operationsBody: "KPro treats limits and failure behavior as part of the API, not production cleanup work.", operationsLink: "Explore operations & capacity", telemetryNote: "Illustrative dashboard — tune every limit to your workload.",
-    startKicker: "FROM ZERO TO A RUNNING SERVICE", startTitle: "Start with the paved path.", startBody: "Pin the release, scaffold a service, and keep generated code under review.", tabInstall: "Install", tabCreate: "Create", tabRun: "Run", copyButton: "Copy", pinNote: "KPro is pre-1.0. Pin an exact version and read the matching release documentation.",
-    readinessKicker: "HONEST BY DEFAULT", readinessTitle: "Engineered for trials.<br>Validated by your workload.", readinessBody: "KPro has repository-level tests, race-sensitive coverage, transport conformance helpers and benchmark budgets. It does not claim your production capacity, availability or compatibility before you measure them.", apiStability: "API stability", productionChecklist: "Production checklist", roadmap: "Production v1 roadmap",
-    ctaTitle: "Build the service.<br><span>Keep the edges clear.</span>", ctaGithub: "Explore on GitHub", ctaQuickstart: "Open quick start", footerText: "Open-source Go infrastructure. Pre-1.0, built in the open."
+  "en": {
+    "navHome": "Overview",
+    "navLearn": "Learn",
+    "navSource": "Source",
+    "navArchitecture": "Architecture",
+    "navProject": "Project tutorial",
+    "navTransports": "Protocols",
+    "navStart": "Quick start",
+    "navReadiness": "Release status",
+    "heroEyebrow": "Open source · Go · pre-1.0",
+    "heroTitle": "Multi-protocol<br><span>services in Go.</span>",
+    "heroLede": "Serve HTTP, TCP, WebSocket, QUIC, gRPC and other protocols in one Go application. KPro provides component assembly, message routing and lifecycle management.",
+    "heroPrimary": "Quick start",
+    "heroSecondary": "Read the docs",
+    "proofOne": "Queue and concurrency limits",
+    "proofTwo": "Protocol-native handlers",
+    "proofThree": "Startup, readiness and shutdown",
+    "exampleLabel": "Service assembly example",
+    "statementKicker": "Protocol handlers",
+    "statementTitle": "Use native HTTP and gRPC handlers",
+    "statementBody": "HTTP and gRPC keep their own handler interfaces. Message protocols such as TCP and WebSocket share Message / Context and message routing. One server manages startup, readiness and shutdown for all mounted components.",
+    "architectureKicker": "Service structure",
+    "architectureTitle": "Connect your handlers to one server",
+    "architectureBody": "Create a server, mount the protocol components you need, and register handlers and routes. The diagram shows how the application, shared runtime and protocol components fit together.",
+    "mapApplication": "APPLICATION",
+    "mapNative": "Native handlers",
+    "mapEdge": "PROTOCOLS",
+    "principleOneTitle": "Startup and shutdown",
+    "principleOneBody": "Validate configuration and wait for components to become ready. During shutdown, close components in order and wait for outbound queues to drain within the configured timeout.",
+    "principleTwoTitle": "Queues and concurrency",
+    "principleTwoBody": "Configure Router queue capacity and in-flight limits, plus message-count and byte limits for transport outbound queues.",
+    "principleThreeTitle": "Application responsibilities",
+    "principleThreeBody": "Implement authentication, authorization, business idempotency and delivery requirements in your application. Configure and validate deployment capacity for your workload.",
+    "projectKicker": "Project tutorial",
+    "projectTitle": "Build an order service, step by step",
+    "projectBody": "Start with an HTTP request, then add business validation, SQLite storage and TCP queries. Continue with order state changes, tests and service shutdown.",
+    "projectPrimary": "Start the tutorial",
+    "projectExamples": "Browse protocol examples",
+    "stackLabel": "EXAMPLE PROJECT",
+    "stackComposition": "service assembly",
+    "stackRules": "business rules",
+    "stackAdapters": "SQLite storage",
+    "stackEvidence": "application tests",
+    "learnDomain": "Define order rules",
+    "learnEdges": "Add HTTP and TCP",
+    "learnLifecycle": "Persist with SQLite",
+    "learnValidate": "Run tests and checks",
+    "transportKicker": "Protocol selection",
+    "transportTitle": "Choose protocols for your service",
+    "transportBody": "Select protocols below to see how they combine, which components use message routing and which keep their own interfaces.",
+    "compositionLabel": "SELECTED PROTOCOLS",
+    "selectedLabel": "protocols",
+    "sharedLabel": "SERVER FEATURES",
+    "sharedItems": "Lifecycle · Backpressure · Health checks · Telemetry · Shutdown",
+    "kindMessage": "Message routing",
+    "kindNative": "Native interface",
+    "operationsKicker": "Operations",
+    "operationsTitle": "Set connection and queue limits.<br>Monitor service status.",
+    "operationsBody": "Configure connection limits, queue capacity and concurrency limits. Observe the service through health checks and metrics. During shutdown, wait for outbound queues to drain within the configured timeout.",
+    "operationsLink": "Read the operations guide",
+    "telemetryState": "Example",
+    "telemetryNote": "Example metrics. These values illustrate the fields; your service supplies the actual data.",
+    "startKicker": "Quick start",
+    "startTitle": "Install the CLI and create an HTTP service",
+    "startBody": "Install a specific release, generate a project and run it locally.",
+    "tabInstall": "Install",
+    "tabCreate": "Create",
+    "tabRun": "Run",
+    "copyButton": "Copy",
+    "pinNote": "KPro is pre-1.0. Pin an exact version and use the documentation for that release.",
+    "readinessKicker": "Version and usage",
+    "readinessTitle": "KPro is currently pre-1.0",
+    "readinessBody": "The current release includes configuration validation, resource limits, shutdown handling and observability support, with repository tests and benchmark budget checks. APIs are not frozen. Before deployment, validate your protocol combination, workload and deployment environment.",
+    "apiStability": "API stability",
+    "productionChecklist": "Production checklist",
+    "roadmap": "Production v1 roadmap",
+    "ctaTitle": "Run an example<br><span>or browse the source.</span>",
+    "ctaGithub": "View source on GitHub",
+    "ctaQuickstart": "Run your first service",
+    "footerText": "KPro · Open-source Go framework for multi-protocol applications."
   },
-  zh: {
-    navArchitecture: "架构", navProject: "项目指南", navTransports: "协议", navStart: "快速开始", navReadiness: "成熟度",
-    heroEyebrow: "开源 · Go · pre-1.0", heroTitle: "一个运行时。<br><span>多种原生协议。</span>",
-    heroLede: "用一套生命周期构建 TCP、QUIC、WebSocket、HTTP、SSE 与 gRPC 服务，同时保留每种协议最合适的开发方式。",
-    heroPrimary: "10 分钟开始", heroSecondary: "阅读文档", proofOne: "资源边界明确", proofTwo: "协议原生接口", proofThree: "运维行为显式",
-    statementKicker: "设计边界", statementTitle: "该统一的地方统一。<br><span>该原生的地方原生。</span>", statementBody: "KPro 统一启动、停机、背压、就绪与可观测性；HTTP 仍是 HTTP，gRPC 仍是 gRPC，消息型传输则共享专注的 Message / Context 模型。",
-    architectureKicker: "一个进程，清晰归属", architectureTitle: "不必再为每种协议重建运行时。", architectureBody: "在依赖中立的服务器后组装独立传输组件。每一层只负责一件事，每条边界都保持可见。", mapApplication: "应用层", mapNative: "原生处理器", mapEdge: "网络边缘",
-    principleOneTitle: "统一生命周期", principleOneBody: "跨组件的配置校验、就绪、失败传播与有界停机。", principleTwoTitle: "有界工作量", principleTwoBody: "Router 准入、在途限制和出站队列让过载行为清晰可控。", principleThreeTitle: "边界保持可见", principleThreeBody: "认证、持久交付和部署容量仍由应用明确负责。",
-    projectKicker: "从 API 到真实项目", projectTitle: "看清框架在哪里结束，业务服务从哪里开始。", projectBody: "跟随项目级蓝图组织独立业务规则，在同一服务周围挂载 HTTP 与消息协议边缘，并让生命周期归属清晰可审查。", projectPrimary: "构建参考服务", projectExamples: "浏览可运行示例", stackLabel: "项目蓝图", stackComposition: "进程组装", stackRules: "业务规则", stackAdapters: "基础设施适配", stackEvidence: "真实协议证据", learnDomain: "建模业务领域", learnEdges: "增加协议边缘", learnLifecycle: "管理完整生命周期", learnValidate: "验证目标负载",
-    transportKicker: "运行时组装器", transportTitle: "选择服务真正需要的边缘。", transportBody: "选择传输协议，查看 KPro 如何共享进程模型，同时保留正确的处理器形态。", compositionLabel: "你的组合", selectedLabel: "种传输", sharedLabel: "共享运行时", sharedItems: "生命周期 · 背压 · 健康检查 · 遥测 · 停机",
-    operationsKicker: "为那些不光鲜却重要的部分而建", operationsTitle: "快很有用。<br>可预测才能部署。", operationsBody: "KPro 将限制和故障行为视为 API 的一部分，而不是上线后的补救工作。", operationsLink: "查看运维与容量规划", telemetryNote: "示意面板——所有限制都应按你的负载进行配置。",
-    startKicker: "从零到运行中的服务", startTitle: "从推荐路径开始。", startBody: "固定精确版本，生成服务骨架，并持续审查生成代码。", tabInstall: "安装", tabCreate: "创建", tabRun: "运行", copyButton: "复制", pinNote: "KPro 仍处于 pre-1.0。请固定精确版本，并阅读对应版本的文档。",
-    readinessKicker: "默认诚实", readinessTitle: "为受控试点而工程化。<br>由你的负载来验证。", readinessBody: "KPro 已具备仓库级测试、race 敏感覆盖、传输契约辅助工具和性能预算。但在实际测量前，它不会声称满足你的生产容量、可用性或兼容性要求。", apiStability: "API 稳定性", productionChecklist: "生产准备清单", roadmap: "生产级 v1 路线图",
-    ctaTitle: "构建服务。<br><span>让边界保持清晰。</span>", ctaGithub: "在 GitHub 探索", ctaQuickstart: "打开快速开始", footerText: "开源 Go 基础设施。Pre-1.0，在公开协作中持续构建。"
+  "zh": {
+    "navHome": "概览",
+    "navLearn": "学习",
+    "navSource": "示例源码",
+    "navArchitecture": "架构",
+    "navProject": "项目教程",
+    "navTransports": "协议",
+    "navStart": "快速开始",
+    "navReadiness": "版本说明",
+    "heroEyebrow": "开源 · Go · pre-1.0",
+    "heroTitle": "Go 多协议<br><span>应用框架</span>",
+    "heroLede": "在同一个 Go 应用中提供 HTTP、TCP、WebSocket、QUIC 和 gRPC 等服务。KPro 负责组件组装、消息路由和服务生命周期管理。",
+    "heroPrimary": "快速开始",
+    "heroSecondary": "阅读文档",
+    "proofOne": "队列与并发限制",
+    "proofTwo": "协议原生接口",
+    "proofThree": "启动、检查与停机",
+    "exampleLabel": "服务组装示例",
+    "statementKicker": "协议处理方式",
+    "statementTitle": "HTTP 和 gRPC 使用原生接口",
+    "statementBody": "HTTP 和 gRPC 沿用各自的处理接口；TCP、WebSocket 等消息协议共用 Message / Context 和消息路由。所有挂载的组件由同一个服务管理启动、就绪检查和关闭。",
+    "architectureKicker": "服务结构",
+    "architectureTitle": "将业务处理器接入同一个服务",
+    "architectureBody": "创建服务，挂载需要的协议组件，再注册处理器和路由。下图展示应用、共享运行时与各协议组件之间的关系。",
+    "mapApplication": "应用层",
+    "mapNative": "原生处理器",
+    "mapEdge": "协议组件",
+    "principleOneTitle": "启动与关闭",
+    "principleOneBody": "启动时校验配置并等待组件就绪。停止时按顺序关闭组件，并在配置的超时时间内等待出站队列排空。",
+    "principleTwoTitle": "队列与并发限制",
+    "principleTwoBody": "通过配置限制 Router 队列容量、在途任务数，以及传输出站队列的消息数和字节数。",
+    "principleThreeTitle": "应用需要负责什么",
+    "principleThreeBody": "认证授权、业务幂等和业务交付要求由应用实现。部署容量需要结合业务负载进行配置与验证。",
+    "projectKicker": "项目教程",
+    "projectTitle": "跟着教程完成一个订单服务",
+    "projectBody": "从一个 HTTP 请求开始，逐步加入业务校验、SQLite 存储和 TCP 查询，再练习订单状态更新、测试和服务关闭。",
+    "projectPrimary": "开始项目教程",
+    "projectExamples": "查看协议示例",
+    "stackLabel": "示例工程结构",
+    "stackComposition": "服务组装",
+    "stackRules": "业务规则",
+    "stackAdapters": "SQLite 存储",
+    "stackEvidence": "应用测试",
+    "learnDomain": "定义订单规则",
+    "learnEdges": "接入 HTTP 与 TCP",
+    "learnLifecycle": "保存到 SQLite",
+    "learnValidate": "运行测试与检查",
+    "transportKicker": "协议选择",
+    "transportTitle": "按需选择服务协议",
+    "transportBody": "选择下面的协议，查看它们如何组合，以及哪些组件使用消息路由、哪些保留各自接口。",
+    "compositionLabel": "已选协议",
+    "selectedLabel": "种协议",
+    "sharedLabel": "服务管理功能",
+    "sharedItems": "生命周期 · 背压 · 健康检查 · 遥测 · 停机",
+    "kindMessage": "消息路由",
+    "kindNative": "原生接口",
+    "operationsKicker": "运行与维护",
+    "operationsTitle": "配置连接与队列上限<br>查看服务运行状态",
+    "operationsBody": "配置连接数、队列容量和并发上限，通过健康检查和指标观察运行状态。关闭服务时，在配置的超时时间内等待出站队列排空。",
+    "operationsLink": "查看运行与维护文档",
+    "telemetryState": "示例",
+    "telemetryNote": "运行指标示例。数值用于说明字段，实际数据来自你的服务。",
+    "startKicker": "快速开始",
+    "startTitle": "安装 CLI 并创建 HTTP 服务",
+    "startBody": "安装指定版本，生成工程，然后在本机运行服务。",
+    "tabInstall": "安装",
+    "tabCreate": "创建",
+    "tabRun": "运行",
+    "copyButton": "复制",
+    "pinNote": "KPro 仍处于 pre-1.0。请固定精确版本，并使用对应版本的文档。",
+    "readinessKicker": "版本与使用范围",
+    "readinessTitle": "KPro 目前处于 pre-1.0",
+    "readinessBody": "当前版本提供配置校验、资源限制、停机处理和可观测性支持，并有仓库测试及性能预算检查。API 尚未冻结；实际部署前，需要按你的协议组合、业务负载和部署环境进行验证。",
+    "apiStability": "API 稳定性",
+    "productionChecklist": "生产准备清单",
+    "roadmap": "生产级 v1 路线图",
+    "ctaTitle": "运行示例，<br><span>或查看项目源码</span>",
+    "ctaGithub": "查看项目源码",
+    "ctaQuickstart": "运行第一个服务",
+    "footerText": "KPro · 开源 Go 多协议应用框架"
   }
 };
 
 let language = navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+try {
+  const saved = localStorage.getItem("kpro-language");
+  if (saved === "zh" || saved === "en") language = saved;
+} catch { /* Browser language remains the fallback. */ }
 const languageButton = document.querySelector("[data-language]");
 
 function applyLanguage() {
@@ -42,11 +178,13 @@ function applyLanguage() {
   });
   languageButton.textContent = language === "zh" ? "EN" : "中文";
   languageButton.setAttribute("aria-label", language === "zh" ? "Switch to English" : "切换为中文");
+  document.dispatchEvent(new Event("kpro:languagechange"));
   updateComposition();
 }
 
 languageButton.addEventListener("click", () => {
   language = language === "en" ? "zh" : "en";
+  try { localStorage.setItem("kpro-language", language); } catch { /* Optional preference. */ }
   applyLanguage();
 });
 
@@ -62,11 +200,12 @@ function updateComposition() {
   const messages = active.filter((button) => button.dataset.kind === "message").length;
   const native = active.length - messages;
   compositionCopy.textContent = language === "zh"
-    ? `${messages} 种消息型传输共享 Message / Context 路由；${native} 种原生传输保留各自接口。所有组件由同一服务生命周期管理。`
-    : `${messages} message transport${messages === 1 ? "" : "s"} share Message / Context routing; ${native} native transport${native === 1 ? "" : "s"} keep their own APIs. One server lifecycle owns them all.`;
+    ? `${messages} 种协议使用 Message / Context 消息路由，${native} 种协议使用各自的原生接口。服务负责启动和关闭所有选中的组件。`
+    : `${messages} protocol${messages === 1 ? "" : "s"} use Message / Context routing; ${native} protocol${native === 1 ? "" : "s"} use their own interfaces. The server starts and stops all selected components.`;
 }
 
 protocolButtons.forEach((button) => {
+  button.setAttribute("aria-pressed", button.classList.contains("active"));
   button.addEventListener("click", () => {
     button.classList.toggle("active");
     button.setAttribute("aria-pressed", button.classList.contains("active"));
@@ -90,31 +229,39 @@ const commands = {
 };
 const commandNode = document.querySelector("[data-command]");
 const outputNode = document.querySelector("[data-terminal-output]");
-document.querySelectorAll("[data-step]").forEach((tab) => {
+const stepTabs = [...document.querySelectorAll("[data-step]")];
+stepTabs.forEach((tab, index) => {
   tab.addEventListener("click", () => {
-    document.querySelectorAll("[data-step]").forEach((item) => { item.classList.remove("active"); item.setAttribute("aria-selected", "false"); });
-    tab.classList.add("active"); tab.setAttribute("aria-selected", "true");
+    stepTabs.forEach((item) => { item.classList.remove("active"); item.setAttribute("aria-selected", "false"); item.tabIndex = -1; });
+    tab.classList.add("active"); tab.setAttribute("aria-selected", "true"); tab.tabIndex = 0;
+    document.querySelector("#start-panel").setAttribute("aria-labelledby", tab.id);
     const step = commands[tab.dataset.step]; commandNode.textContent = step.command; outputNode.innerHTML = step.output;
+  });
+  tab.addEventListener("keydown", event => {
+    const target = { ArrowRight: (index + 1) % stepTabs.length, ArrowLeft: (index + stepTabs.length - 1) % stepTabs.length, Home: 0, End: stepTabs.length - 1 }[event.key];
+    if (target == null) return;
+    event.preventDefault();
+    stepTabs[target].click();
+    stepTabs[target].focus();
   });
 });
 
+let copyTimeout;
 document.querySelector("[data-copy]").addEventListener("click", async (event) => {
+  const button = event.currentTarget;
+  clearTimeout(copyTimeout);
   try {
     await navigator.clipboard.writeText(commandNode.textContent);
-    event.currentTarget.textContent = language === "zh" ? "已复制" : "Copied";
-    setTimeout(() => { event.currentTarget.textContent = translations[language].copyButton; }, 1300);
+    button.textContent = language === "zh" ? "已复制" : "Copied";
   } catch {
-    event.currentTarget.textContent = language === "zh" ? "请选择复制" : "Select to copy";
+    const range = document.createRange();
+    range.selectNodeContents(commandNode);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    button.textContent = language === "zh" ? "按 Ctrl+C / ⌘C" : "Press Ctrl+C / ⌘C";
   }
+  copyTimeout = setTimeout(() => { button.textContent = translations[language].copyButton; }, 1800);
 });
 
-const header = document.querySelector("[data-header]");
-window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 20), { passive: true });
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); } });
-}, { threshold: .12 });
-document.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
-
 applyLanguage();
-updateComposition();
