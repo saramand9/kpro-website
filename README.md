@@ -26,21 +26,28 @@ region and asset hashes in `dist/index.html`; the rest is maintained directly.
 Homepage layout and behavior live in `dist/styles.css` and `dist/app.js`.
 Reading-specific styles and behavior live in `dist/learn.css` and `dist/learn.js`.
 
-The tutorial uses a single reading column, theme-aware code, and an on-demand
-native chapter dialog. The homepage retains its architecture map, protocol
-composer and quick-start commands. The footer links to the project tutorial;
-its order-service walkthrough, source map and chapters live on the Learn pages.
+The tutorial uses a wide reading column with a sticky chapter sidebar on desktop.
+Wide screens add a separate page outline on the right, with the current section
+highlighted while reading. Smaller screens keep chapter and page-outline buttons
+below the site header; each opens a native dialog. Without JavaScript, smaller
+screens show the chapter links above the content. Code excerpts link to highlighted
+source lines, while copying retains the original code. The homepage explains
+fit, a cross-protocol order workflow, application responsibilities, storage choices,
+protocol selection, operations and adoption. Its sticky section navigation follows
+the reader; protocol presets explain client use and integration work. Walkthroughs
+link to the runnable project and source, while CLI commands start a new project.
 All nine chapters follow the same runnable project: first request, business
 rules, HTTP, object wiring, persistence, TCP, state changes, lifecycle, and an
 independent requirement change. Each connects concrete operations to source,
 expected results, failure diagnosis, and a hands-on exercise. The approved HTTP
 chapter remains the representative lesson; the other eight now have comparable
-step-by-step explanations. Chapter titles, URLs and single-column layout remain.
+step-by-step explanations. Chapter titles and URLs remain unchanged.
 The shared theme preference is `kpro-theme`, with a read-only fallback to the old
 `kpro-learn-theme` value. New visits default to light. Homepage language is saved
 separately as `kpro-language`; the tutorial remains Chinese.
 
-Before handing off, check desktop and narrow-screen reading, chapter-dialog
+Before handing off, check desktop and narrow-screen reading, persistent chapter
+navigation while scrolling, current-page highlighting, chapter-dialog
 keyboard navigation/Escape, copy buttons, source links, and both themes. The
 static checker also verifies that syntax highlighting leaves source excerpts
 byte-for-byte consistent with the downloadable project. It also checks that

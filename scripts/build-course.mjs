@@ -38,7 +38,8 @@ function highlightGo(value) {
     else if (goTypes.has(token)) kind = "type";
     else if (/^\s*\(/.test(value.slice(match.index + token.length))) kind = "function";
     html += escape(value.slice(position, match.index));
-    html += kind ? `<span class="syntax-${kind}">${escape(token)}</span>` : escape(token);
+    // Keep each line's markup balanced when a comment or raw string spans lines.
+    html += kind ? escape(token).split("\n").map(line => `<span class="syntax-${kind}">${line}</span>`).join("\n") : escape(token);
     position = match.index + token.length;
   }
   return html + escape(value.slice(position));
@@ -57,11 +58,12 @@ const icons = {
 };
 const icon = (name, extra = "") => `<svg class="icon ${extra}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
 const anchor = name => name.replace(/[^a-zA-Z0-9]/g, "-");
-const link = name => {
+const lineAnchor = (name, line) => `${anchor(name)}-L${line}`;
+const link = (name, line) => {
   if (!source.has(name)) throw new Error(`Unknown source file: ${name}`);
-  return `<a class="file-link" href="@@ROOT@@learn/source.html#${anchor(name)}">${escape(name)}</a>`;
+  return `<a class="file-link" href="@@ROOT@@learn/source.html#${line == null ? anchor(name) : lineAnchor(name, line)}">${escape(name)}</a>`;
 };
-function code(name, from, to, focus = []) {
+function code(name, from, to, focus = [], { lineAnchors = false } = {}) {
   let text = source.get(name);
   if (text == null) throw new Error(`Unknown source file: ${name}`);
   const start = from ? text.indexOf(from) : 0;
@@ -74,8 +76,8 @@ function code(name, from, to, focus = []) {
   }
   const highlighted = name.endsWith(".go") ? highlightGo(text) : escape(text);
   const lines = text.split("\n");
-  const rendered = focus.length ? highlighted.split("\n").map((line, i) => `<span class="code-line${focus.some(needle => lines[i].includes(needle)) ? " highlighted" : ""}">${line}</span>`).join("\n") : highlighted;
-  return `<figure class="code-block"><figcaption>${link(name)}<span>${from || to ? "节选 · " : ""}L${firstLine}</span><button class="copy" type="button" aria-label="复制代码">${icon("copy")}<span>复制</span></button></figcaption><pre tabindex="0"><code>${rendered}</code></pre></figure>`;
+  const rendered = lineAnchors || focus.length ? highlighted.split("\n").map((line, i) => `<span class="code-line${lineAnchors ? " source-line" : ""}${focus.some(needle => lines[i].includes(needle)) ? " highlighted" : ""}"${lineAnchors ? ` id="${lineAnchor(name, firstLine + i)}"` : ""}>${line}</span>`).join("\n") : highlighted;
+  return `<figure class="code-block"><figcaption>${link(name, firstLine)}<span>${from || to ? "节选 · " : ""}L${firstLine}</span><button class="copy" type="button" aria-label="复制代码">${icon("copy")}<span>复制</span></button></figcaption><pre tabindex="0"><code>${rendered}</code></pre></figure>`;
 }
 const terminal = (title, value) => `<figure class="code-block terminal"><figcaption><span class="terminal-label"><span aria-hidden="true">❯_</span> ${escape(title)}</span><button class="copy" type="button" aria-label="复制命令">${icon("copy")}<span>复制</span></button></figcaption><pre tabindex="0"><code>${escape(value)}</code></pre></figure>`;
 const output = (title, value) => `<figure class="code-block output"><figcaption><span class="output-label">${escape(title)}</span></figcaption><pre tabindex="0"><code>${escape(value)}</code></pre></figure>`;
@@ -89,13 +91,19 @@ function chapterLinks(current) {
 function contents(current) {
   return `<dialog class="contents-dialog" id="course-nav" aria-labelledby="contents-title"><div class="contents-heading"><div><p>项目教程</p><h2 id="contents-title">构建一个订单服务</h2></div><button class="close-contents" type="button" aria-label="关闭目录">×</button></div><nav class="chapter-list" aria-label="教程章节">${chapterLinks(current)}</nav><div class="contents-footer"><a href="@@ROOT@@learn/source.html"${current === "source" ? ' aria-current="page"' : ""}>${icon("code")}完整源码</a><a href="@@ROOT@@downloads/orders.zip" download>${icon("download")}下载工程</a><span>KPro v0.2.1</span></div></dialog>`;
 }
-function shell({ title, current, body, prefix, description, next, index }) {
+function courseSidebar(current, pageToc) {
+  return `<aside class="course-sidebar" aria-label="课程导航"><div class="sidebar-heading"><p>项目教程</p><h2>构建一个订单服务</h2></div><nav class="course-chapters" aria-label="全部章节">${chapterLinks(current)}</nav><div class="sidebar-resources"><a href="@@ROOT@@learn/source.html"${current === "source" ? ' aria-current="page"' : ""}>${icon("code")}完整源码</a><a href="@@ROOT@@downloads/orders.zip" download>${icon("download")}下载工程</a></div>${pageToc ? `<details class="sidebar-page-toc"><summary>本页内容</summary><nav aria-label="本页内容" data-page-toc>${pageToc}</nav></details>` : ""}</aside>`;
+}
+function shell({ title, current, body, prefix, description, index, pageToc = "" }) {
   const isOverview = current === "overview";
-  const dock = `<nav class="reading-dock" aria-label="阅读导航"><button class="contents-toggle" type="button" aria-label="章节目录" aria-haspopup="dialog" aria-controls="course-nav">${icon("menu")}<span>目录</span></button><div class="dock-current"><span>${index == null ? "参考资料" : isOverview ? "项目概览" : `第 ${index} 章`}</span><strong>${isOverview ? "构建一个订单服务" : title}</strong></div>${next ? `<a class="dock-next" href="${href(next)}">${isOverview ? "开始学习" : "下一章"}${icon("arrow")}</a>` : `<a class="dock-next" href="@@ROOT@@learn.html">项目概览${icon("arrow")}</a>`}</nav>`;
+  const pageContentsTitle = current === "source" ? "文件索引" : "本页目录";
+  const dock = `<nav class="reading-dock" aria-label="阅读导航"><button class="contents-toggle" type="button" aria-label="章节目录" aria-haspopup="dialog" aria-controls="course-nav" aria-expanded="false">${icon("menu")}<span>章节目录</span></button><div class="dock-current"><span>${index == null ? "参考资料" : isOverview ? "项目概览" : `第 ${index} 章`}</span><strong>${isOverview ? "构建一个订单服务" : title}</strong></div><button class="page-contents-toggle" type="button" aria-haspopup="dialog" aria-controls="page-nav" aria-expanded="false">${pageContentsTitle}</button></nav>`;
+  const pageContents = `<aside class="page-contents" aria-labelledby="page-toc-heading"><h2 id="page-toc-heading">${pageContentsTitle}</h2><nav class="page-links" aria-label="${pageContentsTitle}" data-page-toc>${pageToc}</nav><a class="back-to-top" href="#main">返回顶部 <span aria-hidden="true">↑</span></a></aside>`;
+  const pageDialog = `<dialog class="page-dialog" id="page-nav" aria-labelledby="page-contents-title"><div class="contents-heading"><div><p>${escape(title)}</p><h2 id="page-contents-title">${pageContentsTitle}</h2></div><button class="close-page-contents" type="button" aria-label="关闭本页目录">×</button></div><nav class="page-links" aria-label="${pageContentsTitle}" data-page-toc>${pageToc}</nav></dialog>`;
   return `<!doctype html>
 <html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><meta name="description" content="${escape(description)}"><title>${escape(title)} · KPro 项目教程</title><script src="@@ROOT@@site.js?v=${assetTag("site.js")}"></script><link rel="stylesheet" href="@@ROOT@@site.css?v=${assetTag("site.css")}"><link rel="stylesheet" href="@@ROOT@@learn.css?v=${assetTag("learn.css")}"></head>
-<body><a class="skip-link" href="#main">跳到正文</a>${siteHeader({ prefix: "@@ROOT@@", current: current === "source" ? "source" : "learn" })}
-<main id="main" class="article${isOverview ? " overview-article" : ""}" tabindex="-1">${body}<footer class="doc-footer"><span>KPro v0.2.1 · 项目教程</span><a href="@@ROOT@@index.html">返回框架首页 ${icon("arrow")}</a></footer></main>${dock}${contents(current)}<noscript><style>.reading-dock,.theme-toggle,.copy{display:none}</style><nav class="nojs-contents" aria-label="教程目录">${chapterLinks(current)}</nav></noscript><div class="toast" role="status" aria-live="polite"></div><script src="@@ROOT@@learn.js?v=${assetTag("learn.js")}" defer></script></body></html>`.replaceAll("@@ROOT@@", prefix);
+<body class="learn"><a class="skip-link" href="#main">跳到正文</a>${siteHeader({ prefix: "@@ROOT@@", current: current === "source" ? "source" : "learn" })}
+${dock}<div class="learn-layout">${courseSidebar(current, pageToc)}<main id="main" class="article${isOverview ? " overview-article" : ""}" tabindex="-1">${body}<footer class="doc-footer"><span>KPro v0.2.1 · 项目教程</span><a href="@@ROOT@@index.html">返回框架首页 ${icon("arrow")}</a></footer></main>${pageContents}</div>${contents(current)}${pageDialog}<noscript><style>.reading-dock,.theme-toggle,.copy{display:none}.course-sidebar{display:block}</style></noscript><div class="toast" role="status" aria-live="polite"></div><script src="@@ROOT@@learn.js?v=${assetTag("learn.js")}" defer></script></body></html>`.replaceAll("@@ROOT@@", prefix);
 }
 // Only the marked shared navigation and asset hashes are generated on the homepage.
 const homePath = path.join(dist, "index.html");
@@ -111,15 +119,18 @@ for (const [i, chapter] of lessons.entries()) {
   const localToc = [...chapter.body.matchAll(/<h2 id="([^"]+)">([^<]+)<\/h2>/g)].map(m => `<a href="#${m[1]}">${m[2]}</a>`).join("");
   const prev = lessons[i - 1], next = lessons[i + 1];
   const pagination = `<nav class="pagination" aria-label="前后章节">${prev ? `<a href="${href(prev)}"><small>← 上一章</small><span>${prev.title}</span></a>` : "<span></span>"}${next ? `<a href="${href(next)}"><small>下一章 →</small><span>${next.title}</span></a>` : `<a href="@@ROOT@@learn/source.html"><small>随时查阅 →</small><span>完整源码索引</span></a>`}</nav>`;
-  const overviewActions = `<div class="hero-actions"><a class="primary-action" href="@@ROOT@@learn/01-first-request.html">开始学习 ${icon("arrow")}</a><a class="text-action" href="@@ROOT@@downloads/orders.zip" download>下载示例工程 ${icon("download")}</a></div><p class="course-meta">Go 1.26.9+<span>·</span>KPro v0.2.1<span>·</span>9 个章节，1 个完整项目</p>`;
+  const overviewActions = `<div class="hero-actions"><a class="primary-action" href="@@ROOT@@learn/01-first-request.html">从第 1 章开始 ${icon("arrow")}</a><a class="text-action" href="#download">先运行完整示例 ${icon("arrow")}</a></div><p class="course-meta">Go 1.26.9+<span>·</span>KPro v0.2.1<span>·</span>9 个章节，1 个完整项目</p>`;
   const syllabus = i === 0 ? `<section class="syllabus" id="chapters"><div class="section-eyebrow">从运行到理解，再到独立修改</div><h2>学习路线</h2><nav class="chapter-list" aria-label="课程安排">${lessons.slice(1).map((c, n) => `<a href="${href(c)}"><span class="lesson-index">${String(n + 1).padStart(2, "0")}</span><span><strong>${c.title}</strong><small>${c.outcome || c.intro}</small></span>${icon("arrow")}</a>`).join("")}</nav></section>` : "";
-  const body = `<header class="chapter-header"><div class="breadcrumb"><a href="@@ROOT@@learn.html">项目教程</a><span>/</span><span>${i === 0 ? "Go 多协议应用开发" : `第 ${i} 章`}</span></div><h1>${chapter.title}</h1><p class="lede">${chapter.intro}</p>${i === 0 ? overviewActions : ""}</header>${i === 0 ? "" : `<details class="chapter-toc"><summary>本章内容</summary><nav aria-label="本章内容">${localToc}</nav></details>`}<div class="prose">${chapter.body}</div>${syllabus}${pagination}`;
+  const pageNavigation = i === 0
+    ? `<nav class="overview-nav" aria-label="学习首页导航"><span class="overview-nav-label">本页导航</span><div class="overview-nav-links">${localToc}<a href="#chapters">学习路线 · ${lessons.length - 1} 章</a></div></nav>`
+    : `<details class="chapter-toc"><summary>本章内容</summary><nav aria-label="本章内容" data-page-toc>${localToc}</nav></details>`;
+  const body = `<header class="chapter-header"><div class="breadcrumb"><a href="@@ROOT@@learn.html">项目教程</a><span>/</span><span>${i === 0 ? "Go 多协议应用开发" : `第 ${i} 章`}</span></div><h1>${chapter.title}</h1><p class="lede">${chapter.intro}</p>${i === 0 ? overviewActions : ""}</header>${pageNavigation}<div class="prose">${chapter.body}</div>${syllabus}${pagination}`;
   const filename = chapter.slug === "overview" ? "learn.html" : `learn/${chapter.slug}.html`;
-  fs.writeFileSync(path.join(dist, filename), shell({ title: chapter.title, current: chapter.slug, body, prefix: i === 0 ? "./" : "../", description: chapter.intro, next, index: i }));
+  fs.writeFileSync(path.join(dist, filename), shell({ title: chapter.title, current: chapter.slug, body, prefix: i === 0 ? "./" : "../", description: chapter.intro, index: i, pageToc: localToc + (i === 0 ? '<a href="#chapters">学习路线</a>' : "") }));
 }
-const fileCards = files.map(name => `<section class="source-file" id="${anchor(name)}"><h2>${escape(name)}</h2>${code(name)}</section>`).join("");
+const fileCards = files.map(name => `<section class="source-file" id="${anchor(name)}"><h2>${escape(name)}</h2>${code(name, undefined, undefined, [], { lineAnchors: true })}</section>`).join("");
 const sourceBody = `<header class="chapter-header"><div class="breadcrumb"><a href="@@ROOT@@learn.html">项目教程</a><span>/</span><span>源码</span><span class="chapter-number">${files.length} FILES</span></div><h1>完整源码</h1><p class="lede">这里列出下载包中的全部文件，包括业务代码、存储、协议入口和测试。教程正文的代码节选也从同一份工程提取。</p></header><a class="download" href="@@ROOT@@downloads/orders.zip" download>下载 orders 工程 <span>ZIP ↓</span></a><nav class="source-index" aria-label="源码文件">${files.map(name => `<a href="#${anchor(name)}">${escape(name)}</a>`).join("")}</nav>${fileCards}`;
-fs.writeFileSync(path.join(dist, "learn/source.html"), shell({ title: "完整源码", current: "source", body: sourceBody, prefix: "../", description: "KPro 订单教学工程的所有源文件，包含业务、协议、存储、运行与测试。" }));
+fs.writeFileSync(path.join(dist, "learn/source.html"), shell({ title: "完整源码", current: "source", body: sourceBody, prefix: "../", description: "KPro 订单教学工程的所有源文件，包含业务、协议、存储、运行与测试。", pageToc: files.map(name => `<a href="#${anchor(name)}">${escape(name)}</a>`).join("") }));
 
 // Deterministic ZIP with stored entries, UTF-8 names and fixed DOS timestamps.
 function crc32(bytes) {

@@ -31,7 +31,7 @@ for (const css of ["styles.css", "learn.css"]) {
   assert(!/:root|\.site-header\s*\{|--bg:|--accent:/.test(read(css)), `${css}: shared styles must not be redefined`);
 }
 assert(!/opacity:\s*0\b/.test(read("styles.css")), "Homepage must remain visible without JavaScript");
-for (const id of ["architecture", "transports", "start", "readiness"]) assert(read("index.html").includes(`id="${id}"`));
+for (const id of ["scenarios", "example", "architecture", "transports", "operations", "start", "readiness"]) assert(read("index.html").includes(`id="${id}"`));
 
 const element = (dataset = {}) => {
   const classes = new Set();
@@ -81,23 +81,31 @@ assert.equal(themePage(new Map([["kpro-theme", "invalid"]])).root.dataset.theme,
 
 // Existing homepage interactions, including async clipboard event lifetime.
 const nodes = new Map();
-for (const selector of ["[data-language]", "[data-selected-list]", "[data-selected-count]", "[data-composition-copy]", "[data-command]", "[data-terminal-output]", "[data-copy]", "#start-panel"]) nodes.set(selector, element());
-const protocols = [element({ protocol: "TCP", kind: "message" }), element({ protocol: "HTTP/2", kind: "native" })];
-protocols.forEach(button => button.classList.add("active"));
+for (const selector of ["[data-language]", "[data-selected-list]", "[data-selected-count]", "[data-protocol-guidance]", "[data-composition-copy]", "[data-command]", "[data-terminal-output]", "[data-copy]", "#start-panel"]) nodes.set(selector, element());
+const protocols = ["TCP", "HTTP/2", "WebSocket", "QUIC", "HTTP/3", "SSE", "gRPC", "UDP"].map(protocol => element({ protocol, kind: ["TCP", "WebSocket", "QUIC", "UDP"].includes(protocol) ? "message" : "native" }));
+protocols.slice(0, 2).forEach(button => button.classList.add("active"));
+const presets = ["http", "orders", "browser"].map(preset => element({ preset }));
 const tabs = ["install", "create", "run"].map(step => Object.assign(element({ step }), { id: `step-${step}` }));
 const translated = [element({ i18n: "navHome" }), element({ i18n: "navLearn" }), element({ i18n: "navSource" })];
 const root = { lang: "" }, storage = new Map();
 let copied, selected, reject = false;
 const timers = [];
 const context = {
-  document: { documentElement: root, querySelector: selector => nodes.get(selector), querySelectorAll: selector => ({ "[data-protocol]": protocols, "[data-step]": tabs, "[data-i18n]": translated })[selector] || [], dispatchEvent() {}, createRange: () => ({ selectNodeContents: node => { selected = node.textContent; } }) },
+  document: { documentElement: root, querySelector: selector => nodes.get(selector), querySelectorAll: selector => ({ "[data-protocol]": protocols, "[data-preset]": presets, "[data-step]": tabs, "[data-i18n]": translated })[selector] || [], dispatchEvent() {}, createRange: () => ({ selectNodeContents: node => { selected = node.textContent; } }) },
   window: { getSelection: () => ({ removeAllRanges() {}, addRange() {} }) },
   navigator: { language: "zh-CN", clipboard: { writeText: async text => { if (reject) throw Error("denied"); copied = text; } } },
   localStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) },
   Event: class { constructor(type) { this.type = type; } },
   setTimeout: fn => { timers.push(fn); return timers.length; }, clearTimeout() {},
 };
-vm.runInNewContext(read("app.js"), context);
+vm.runInNewContext(read("app.js") + "\nglobalThis.testTranslations = translations;", context);
+for (const [, key] of read("index.html").matchAll(/data-i18n="([^"]+)"/g)) {
+  for (const lang of ["zh", "en"]) {
+    const value = context.testTranslations[lang][key];
+    assert(value, `Homepage: missing ${lang} translation for ${key}`);
+    assert(!/\?{3,}|\uFFFD/.test(value), `Homepage: damaged ${lang} encoding for ${key}`);
+  }
+}
 assert.equal(root.lang, "zh-CN");
 assert.equal(protocols[0].attributes["aria-pressed"], "true");
 protocols[0].click();
@@ -107,6 +115,22 @@ nodes.get("[data-language]").click();
 assert.equal(root.lang, "en");
 assert.equal(storage.get("kpro-language"), "en");
 assert.equal(translated[1].innerHTML, "Learn");
+assert.equal(translated[2].innerHTML, "Example source");
+presets[2].click();
+assert.equal(nodes.get("[data-selected-count]").textContent, 2);
+assert.equal(protocols[0].attributes["aria-pressed"], "false");
+assert.equal(protocols[2].attributes["aria-pressed"], "true");
+assert(nodes.get("[data-protocol-guidance]").innerHTML.includes("WebSocket"));
+presets[1].click();
+assert.equal(protocols[0].attributes["aria-pressed"], "true");
+assert.equal(protocols[2].attributes["aria-pressed"], "false");
+assert.equal(presets[1].attributes["aria-pressed"], "true");
+protocols[0].click();
+protocols[1].click();
+assert.equal(nodes.get("[data-selected-count]").textContent, 0);
+assert(!nodes.get("[data-protocol-guidance]").innerHTML.includes("<article>"), "Empty selection must not retain prior protocol guidance");
+presets[0].click();
+assert.equal(nodes.get("[data-selected-count]").textContent, 1);
 tabs[0].listeners.keydown({ key: "End", preventDefault() {} });
 assert.equal(tabs[2].focused, true);
 assert.equal(nodes.get("#start-panel").attributes["aria-labelledby"], "step-run");
@@ -118,10 +142,43 @@ event.currentTarget = null; // Native browser events clear this after dispatch.
 await copying;
 assert.equal(copied, nodes.get("[data-command]").textContent);
 assert.equal(button.textContent, "Copied");
+tabs[0].click();
+assert.equal(button.textContent, "Copy", "A newly selected step must not inherit the previous command's copied state");
+await button.click();
+assert.equal(button.textContent, "Copied");
 timers.at(-1)();
 assert.equal(button.textContent, "Copy");
 reject = true;
 await button.click();
 assert.equal(selected, nodes.get("[data-command]").textContent);
 assert(button.textContent.includes("Ctrl+C"));
-console.log(`PASS: ${pages.length} shared headers/assets, local links, theme persistence/migration, storage fallback, language, composer, keyboard tabs and clipboard.`);
+
+// Switching steps while the browser is resolving clipboard access must not
+// mark the new command as copied or select it when an older copy fails.
+reject = false;
+tabs[0].click();
+let finishCopy;
+context.navigator.clipboard.writeText = text => new Promise(resolve => {
+  finishCopy = () => { copied = text; resolve(); };
+});
+const originalCommand = nodes.get("[data-command]").textContent;
+const pendingCopy = button.click();
+tabs[1].click();
+assert.notEqual(nodes.get("[data-command]").textContent, originalCommand);
+finishCopy();
+await pendingCopy;
+assert.equal(copied, originalCommand, "The clipboard operation must retain the command that was requested");
+assert.equal(button.textContent, "Copy", "Late success must not mark a different step as copied");
+
+let rejectCopy;
+context.navigator.clipboard.writeText = () => new Promise((resolve, reject) => {
+  rejectCopy = () => reject(new Error("permission denied"));
+});
+selected = undefined;
+const deniedPendingCopy = button.click();
+tabs[2].click();
+rejectCopy();
+await deniedPendingCopy;
+assert.equal(selected, undefined, "Late denial must not select the newly displayed command");
+assert.equal(button.textContent, "Copy", "Late denial must not overwrite the new step's copy control");
+console.log(`PASS: ${pages.length} shared headers/assets, local links, theme persistence/migration, storage fallback, language, composer, keyboard tabs, clipboard and step-change copy races.`);

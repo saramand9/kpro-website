@@ -11,6 +11,8 @@
   --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   --radius: 8px;
+  --page-width: 1440px;
+  --page-padding: 32px;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -35,7 +37,7 @@ a, button, summary { touch-action: manipulation; }
 .skip-link { position: fixed; top: -100px; left: 20px; padding: 10px 16px; background: var(--heading); color: var(--bg); z-index: 100; border-radius: 6px; }
 .skip-link:focus { top: 10px; }
 .site-header { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line-soft); }
-.site-header-inner { max-width: 1280px; min-height: 72px; margin: auto; padding: 0 32px; display: flex; align-items: center; gap: 44px; }
+.site-header-inner { width: calc(100% - 2 * var(--page-padding)); max-width: var(--page-width); min-height: 72px; margin: auto; display: flex; align-items: center; gap: 44px; }
 .brand { display: inline-flex; align-items: center; gap: 8px; font-size: 24px; font-weight: 750; color: var(--heading); letter-spacing: -.8px; flex-shrink: 0; }
 .brand:hover { text-decoration: none; }
 .brand > svg { width: 27px; height: 27px; }
@@ -60,8 +62,9 @@ a, button, summary { touch-action: manipulation; }
 .button-secondary { background: var(--bg); color: var(--heading); border-color: var(--line); }
 .button-secondary:hover { background: var(--surface); text-decoration: none; }
 @media (max-width: 640px) {
+  :root { --page-padding: 22px; }
   html { scroll-padding-top: 126px; }
-  .site-header-inner { min-height: 104px; padding: 0 22px; gap: 0; flex-wrap: wrap; }
+  .site-header-inner { min-height: 104px; gap: 0; flex-wrap: wrap; }
   .brand { font-size: 22px; }
   .site-header .brand, .site-actions { height: 60px; }
   .site-actions { gap: 10px; }
@@ -70,5 +73,5 @@ a, button, summary { touch-action: manipulation; }
   .site-nav a { font-size: 13px; }
   .theme-toggle, .language-switch { min-width: 36px; height: 40px; }
 }
-@media (max-width: 380px) { .site-header-inner { padding-inline: 18px; } }
+@media (max-width: 380px) { :root { --page-padding: 18px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }

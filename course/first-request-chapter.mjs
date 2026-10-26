@@ -5,8 +5,9 @@ export function firstRequestChapter({ code, terminal, output, note, table, link 
     intro: "先不用订单、数据库和项目分层。用一个可以改动的小程序，看清一条请求如何进入你的 Go 函数，又怎样回到客户端。",
     body: `
     <h2 id="run">先得到一个真正的响应</h2>
-    <p>从<a href="@@ROOT@@learn.html#download">项目概览</a>下载工程，解压后进入包含 <code>go.mod</code> 的 orders 目录。后面的命令都在这里运行，不要进入 cmd/hello 再执行。若概览中的订单服务还在运行，先在它的终端按 Ctrl+C，释放 8080 端口。</p>
-    ${terminal("终端 1 · 保持运行", "go run ./cmd/hello")}
+    <div class="checkpoint"><strong>开始前，准备好示例工程</strong><p>需要会基本 Go 语法、能在终端执行命令，并安装 <strong>Go 1.26.9 或更新版本</strong>。首次下载依赖需要网络。这一章先运行最小 HTTP 示例，后面再逐步理解完整订单服务。</p><p><a class="download" href="@@ROOT@@downloads/orders.zip" download>下载示例工程 <span>ZIP ↓</span></a><a href="@@ROOT@@learn.html#download">查看环境与运行说明 →</a></p></div>
+    <p>解压后进入包含 <code>go.mod</code> 的 orders 目录。后面的命令都在这里运行，不要进入 cmd/hello 再执行。若已经启动了概览中的订单服务，先在它的终端按 Ctrl+C，释放 8080 端口。</p>
+    ${terminal("终端 1 · 核对环境后启动，保持运行", "go version\ngo mod download\ngo run ./cmd/hello")}
     <p>Hello 程序启动成功时没有专门的提示，终端也不会返回命令行；这是它在等待请求，不是卡死。等首次编译结束，在另一个终端发请求。Windows PowerShell 请把本教程中的 <code>curl</code> 写成 <code>curl.exe</code>。</p>
     ${terminal("终端 2 · 请求刚启动的程序", "curl -i http://127.0.0.1:8080/hello")}
     ${output("应看到的关键响应 · 省略 Date 等响应头", `HTTP/1.1 200 OK

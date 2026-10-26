@@ -25,7 +25,12 @@ for (const file of files) {
   assert(html.includes('<dialog class="contents-dialog"'), `${file}: missing accessible chapter dialog`);
   assert(html.includes('aria-labelledby="contents-title"'), `${file}: dialog must have a name`);
   assert(html.includes('<noscript>'), `${file}: navigation must work without JavaScript`);
-  assert(!html.includes('class="sidebar"') && !html.includes('class="page-rail"'), `${file}: reading view must not have permanent rails`);
+  const sidebar = html.match(/<aside class="course-sidebar"[\s\S]*?<\/aside>/)?.[0];
+  assert(sidebar?.includes('aria-label="全部章节"'), `${file}: missing persistent chapter navigation`);
+  assert.equal((sidebar.match(/class="lesson-index"/g) || []).length, 10, `${file}: navigation must include the overview and all nine chapters`);
+  const activeLink = sidebar.match(/<a href="([^"]+)" aria-current="page">/)?.[1];
+  assert(activeLink, `${file}: sidebar must mark the current page`);
+  assert.equal(new URL(activeLink, `https://local.test/${file}`).pathname, `/${file}`, `${file}: sidebar marks the wrong page`);
   if (/^learn\/\d{2}-/.test(file)) {
     assert(html.includes('id="exercise"'), `${file}: missing hands-on exercise`);
     assert(html.includes('class="code-block output"'), `${file}: missing observable expected result`);
@@ -48,10 +53,26 @@ for (const file of files) {
     }
     linkCount++;
   }
-  for (const match of html.matchAll(/<figure class="code-block"><figcaption><a[^>]*>([^<]+)<\/a>[\s\S]*?<pre[^>]*><code>([\s\S]*?)<\/code><\/pre><\/figure>/g)) {
-    const filename = decode(match[1]);
+  const codeBlocks = [...html.matchAll(/<figure class="code-block"><figcaption><a[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a><span>(?:节选 · )?L(\d+)<\/span>[\s\S]*?<pre[^>]*><code>([\s\S]*?)<\/code><\/pre><\/figure>/g)];
+  assert.equal(codeBlocks.length, (html.match(/<figure class="code-block">/g) || []).length, `${file}: every source block must expose its file and starting line`);
+  for (const match of codeBlocks) {
+    const filename = decode(match[2]);
     const actual = fs.readFileSync(path.join(root, "examples/orders", filename), "utf8").replace(/\r\n/g, "\n");
-    assert(actual.includes(decode(match[2].replace(/<[^>]*>/g, ""))), `${file}: stale excerpt from ${filename}`);
+    const excerpt = decode(match[4].replace(/<[^>]*>/g, ""));
+    const firstLine = Number(match[3]);
+    const fileAnchor = filename.replace(/[^a-zA-Z0-9]/g, "-");
+    assert(actual.split("\n").slice(firstLine - 1).join("\n").startsWith(excerpt), `${file}: excerpt does not match ${filename} at L${firstLine}`);
+    assert.equal(new URL(decode(match[1]), `https://local.test/${file}`).hash, `#${fileAnchor}-L${firstLine}`, `${file}: excerpt link must target its actual source line`);
+    if (file === "learn/source.html") {
+      assert.equal(excerpt, actual.trimEnd(), `${filename}: source anchors changed the copied text`);
+      const renderedLines = match[4].split("\n"), actualLines = actual.trimEnd().split("\n");
+      assert.equal(renderedLines.length, actualLines.length, `${filename}: source line count drifted`);
+      for (const [i, line] of renderedLines.entries()) {
+        assert(line.startsWith(`<span class="code-line source-line" id="${fileAnchor}-L${i + 1}">`), `${filename}: missing source anchor L${i + 1}`);
+        assert.equal(decode(line.replace(/<[^>]*>/g, "")), actualLines[i], `${filename}: source line L${i + 1} changed`);
+        assert.equal((line.match(/<span\b/g) || []).length, (line.match(/<\/span>/g) || []).length, `${filename}: unbalanced syntax markup at L${i + 1}`);
+      }
+    }
     excerptCount++;
   }
 }
